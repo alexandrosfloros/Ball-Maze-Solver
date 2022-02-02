@@ -61,7 +61,7 @@ class Ball:
 
     def balance_x(self):
 
-        # once the ball reaches a certain speed, the board stops tilting
+        # once the ball reaches an approximately zero speed, the board stops tilting
 
         if self.velocity[0] > self.min_speed:
             self.move_xneg()
@@ -76,7 +76,7 @@ class Ball:
 
     def balance_y(self):
 
-        # once the ball reaches a certain speed, the board stops tilting
+        # once the ball reaches an approximately zero speed, the board stops tilting
 
         if self.velocity[1] > self.min_speed:
             self.move_yneg()
@@ -113,7 +113,7 @@ class BallMazeAlgorithm:
     def run(self):
         if self.ball.progress < self.limit:
 
-            # coordinates of the current node
+            # coordinates of the next node
 
             xn, yn = self.nodes[self.ball.progress]
 
