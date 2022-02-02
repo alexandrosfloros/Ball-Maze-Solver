@@ -9,15 +9,15 @@ Motor in the y axis (moves the ball in x):
 
 Method           | Motor angle (absolute)
 self.equal_x()   | 0
-self.move_xpos() | +theta
-self.move_xneg() | -theta
+self.move_xpos() | -theta
+self.move_xneg() | +theta
 
 Motor in the x axis (moves the ball in y):
 
 Method           | Motor angle (absolute)
 self.equal_y()   | 0
-self.move_xpos() | +theta
-self.move_xneg() | -theta
+self.move_xpos() | -theta
+self.move_xneg() | +theta
 
 where theta is a very small angle (small acceleration)
 """
