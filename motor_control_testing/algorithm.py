@@ -1,5 +1,5 @@
 """
-This is the file containing the algorithm used to control the motors
+This is the file containing the algorithm used to control the motors (testing only)
 """
 
 """
@@ -168,7 +168,7 @@ class BallMazeAlgorithm:
                 if abs(yb - yn) < self.node_tolerance:
                     self.ball.balance_y()
 
-                    # moving ball back to starting point
+                    # moving ball back to starting node
 
                     if self.ball.progress == self.limit:
                         self.ball.progress = 0

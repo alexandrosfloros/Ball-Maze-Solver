@@ -7,7 +7,7 @@ from simulation import *
 # initialising path nodes
 
 nodes = [
-    [0.5, 1.0], # starting point
+    [0.5, 1.0], # starting node
     [1.0, 1.25],
     [1.5, 1.25],
     [2, 1.0],
@@ -34,7 +34,7 @@ nodes = [
     [4.5, 4.0],
     [4.5, 3.5],
     [4.25, 3.0],
-    [4.25, 2.25] # ending point
+    [4.25, 2.25] # ending node
 ]
 
 # initialising ball position
