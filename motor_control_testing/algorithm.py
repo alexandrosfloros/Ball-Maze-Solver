@@ -141,7 +141,7 @@ class BallMazeAlgorithm:
                     else:
                         self.ball.move_xneg()
                 
-                # the ball is close to the current node and the algorithm attempts to immobilise it
+                # the ball is close to the current node and the algorithm attempts to immobilise it in the x axis
 
                 if abs(xb - xn) < self.node_tolerance:
                     self.ball.balance_x()
@@ -163,12 +163,12 @@ class BallMazeAlgorithm:
                     else:
                         self.ball.move_yneg()
                 
-                # the ball is close to the current node and the algorithm attempts to immobilise it
+                # the ball is close to the current node and the algorithm attempts to immobilise it in the y axis
 
                 if abs(yb - yn) < self.node_tolerance:
                     self.ball.balance_y()
 
-                    # moving ball back to starting node
+                    # the ball moves back to the starting node, only used for simulation
 
                     if self.ball.progress == self.limit:
                         self.ball.progress = 0
