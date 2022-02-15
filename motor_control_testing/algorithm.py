@@ -36,8 +36,8 @@ class Ball:
         self.velocity = [0.0, 0.0]
         self.acceleration = [0.0, 0.0] # only used for simulation
 
-        self.max_speed = 0.02 # units/frame
-        self.min_speed = 0.002 # units/frame
+        self.max_speed = 0.01 # units/frame
+        self.min_speed = 0.001 # units/frame
 
         self.moving_x = True
         self.progress = 0
@@ -112,7 +112,7 @@ class BallMazeAlgorithm:
         self.ball = ball
         self.nodes = nodes
         self.limit = len(self.nodes)
-        self.node_tolerance = 0.2 # units
+        self.node_tolerance = 0.1 # units
     
     """
     The following algorithm is being run every single frame and uses the ball position
