@@ -35,5 +35,5 @@ def animate_model(model):
         
         return model.update_ball(ax)
 
-    animation = FuncAnimation(fig, update, init_func = init, blit = True, interval = 20)
+    animation = FuncAnimation(fig, update, init_func = init, blit = True, interval = 20) # 50fps
     plt.show()

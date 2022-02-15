@@ -18,10 +18,10 @@ class BallMazeModel:
         ax.set_xlim([0, 5])
         ax.set_ylim([0, 5])
 
-        xp = [n[0] for n in self.nodes]
-        yp = [n[1] for n in self.nodes]
-        path = ax.plot(xp, yp, "b-o")
+        xn = [n[0] for n in self.nodes]
+        yn = [n[1] for n in self.nodes]
+        nodes = ax.plot(xn, yn, "b-o")
         
         self.ball_pos, = ax.plot([self.ball.position[0]], [self.ball.position[1]], "go", markersize = 10)
         
-        return path + [self.ball_pos]
+        return nodes + [self.ball_pos]

@@ -3,7 +3,9 @@ This is the file containing the algorithm used to control the motors (testing on
 """
 
 """
-Motor signals:
+Information from the Ball class:
+
+Motor outputs:
 
 Motor in the y axis (moves the ball in x):
 
@@ -20,6 +22,12 @@ self.move_xpos() | +theta
 self.move_xneg() | -theta
 
 where theta is a very small angle (small acceleration)
+
+Display outputs:
+
+Attribute        | Information
+self.position    | Ball position
+self.next_node   | Ball destination
 """
 
 class Ball:
@@ -28,8 +36,9 @@ class Ball:
         self.velocity = [0.0, 0.0]
         self.acceleration = [0.0, 0.0] # only used for simulation
 
-        self.max_speed = 0.02
-        self.min_speed = 0.001
+        self.max_speed = 0.02 # units/frame
+        self.min_speed = 0.002 # units/frame
+
         self.moving_x = True
         self.progress = 0
     
@@ -103,7 +112,7 @@ class BallMazeAlgorithm:
         self.ball = ball
         self.nodes = nodes
         self.limit = len(self.nodes)
-        self.node_tolerance = 0.1
+        self.node_tolerance = 0.2 # units
     
     """
     The following algorithm is being run every single frame and uses the ball position
@@ -115,7 +124,8 @@ class BallMazeAlgorithm:
 
             # coordinates of the next node
 
-            xn, yn = self.nodes[self.ball.progress]
+            self.ball.next_node = self.nodes[self.ball.progress]
+            xn, yn = self.ball.next_node
 
             # coordinates of the ball
 
