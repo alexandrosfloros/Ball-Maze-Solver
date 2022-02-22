@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 class Interface:
     def __init__(self, master):
@@ -16,10 +18,17 @@ class Interface:
         self.main_menu_frame = ttk.Frame(self.master)
         self.puzzle_frame = ttk.Frame(self.master)
 
-        ### initialising puzzle display frame
+        ### initialising puzzle display canvas
 
-        self.puzzle_display_frame = tk.Frame(self.puzzle_frame, width = 500, height = 500, bg = "gray") # this will be the matplotlib plot
-        self.puzzle_display_frame.pack(side = "left")
+        self.puzzle_display_figure = plt.figure(figsize = (5, 5))
+        self.puzzle_display_axes = self.puzzle_display_figure.add_axes([0, 0, 1, 1])
+
+        x = range(100)
+        y = [i ** 2 for i in x]
+        self.puzzle_display_axes.plot(x, y)
+
+        self.puzzle_display_canvas = FigureCanvasTkAgg(self.puzzle_display_figure, master = self.puzzle_frame)
+        self.puzzle_display_canvas.get_tk_widget().pack(side = "left")
 
         ### initialising puzzle data frame
 
