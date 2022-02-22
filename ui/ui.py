@@ -51,24 +51,29 @@ class Interface:
         self.main_menu_label = ttk.Label(self.main_menu_frame, text = "Select a puzzle difficulty:")
         self.main_menu_label.pack(pady = 50)
 
-        self.easy_dif_button = ttk.Button(self.main_menu_frame, text = "Easy", width = 80, command = self.load_easy_dif) # select easy difficulty
-        self.easy_dif_button.pack(ipady = 25)
+        self.easy_difficulty_button = ttk.Button(self.main_menu_frame, text = "Easy", width = 80, command = self.load_easy_difficulty) # select easy difficulty
+        self.easy_difficulty_button.pack(ipady = 25)
 
-        self.medium_dif_button = ttk.Button(self.main_menu_frame, text = "Medium", width = 80, command = self.load_medium_dif) # select medium difficulty
-        self.medium_dif_button.pack(pady = 30, ipady = 25)
+        self.medium_difficulty_button = ttk.Button(self.main_menu_frame, text = "Medium", width = 80, command = self.load_medium_difficulty) # select medium difficulty
+        self.medium_difficulty_button.pack(pady = 30, ipady = 25)
 
-        self.medium_dif_button = ttk.Button(self.main_menu_frame, text = "Hard", width = 80, command = self.load_hard_dif) # select hard difficulty
-        self.medium_dif_button.pack(ipady = 25)
+        self.medium_difficulty_button = ttk.Button(self.main_menu_frame, text = "Hard", width = 80, command = self.load_hard_difficulty) # select hard difficulty
+        self.medium_difficulty_button.pack(ipady = 25)
 
         ### initialising info widgets
 
         self.general_treeview = ttk.Treeview(self.info_frame, columns = ("column1", "column2"), show = "headings", selectmode = "none") # contains general info about the puzzle
         self.general_treeview.column("column1", width = 100)
         self.general_treeview.column("column2", width = 100)
+
         self.difficulty_row = self.general_treeview.insert("", "end", values = ("Difficulty:", ""))
         self.time_row = self.general_treeview.insert("", "end", values = ("Time [s]:", ""))
-        self.progress_row = self.general_treeview.insert("", "end", values = ("Progress: ", ""))
-        self.next_point_row = self.general_treeview.insert("", "end", values = ("Next point: ", ""))
+        self.progress_row = self.general_treeview.insert("", "end", values = ("Progress:", ""))
+        self.current_position_row = self.general_treeview.insert("", "end", values = ("Current Position:", ""))
+        self.next_position_row = self.general_treeview.insert("", "end", values = ("Next Position:", ""))
+        self.x_velocity_row = self.general_treeview.insert("", "end", values = ("X Velocity:", ""))
+        self.y_velocity_row = self.general_treeview.insert("", "end", values = ("Y Velocity:", ""))
+
         self.general_treeview.bind("<Button-1>", self.disable_treeview)
         self.general_treeview.pack()
 
@@ -102,7 +107,7 @@ class Interface:
 
         self.main_menu_frame.pack()
 
-    def load_easy_dif(self):
+    def load_easy_difficulty(self):
 
         ### hide main menu page
 
@@ -117,7 +122,7 @@ class Interface:
         self.difficulty = "EASY"
         self.general_treeview.set(self.difficulty_row, "column2", self.difficulty)
 
-    def load_medium_dif(self):
+    def load_medium_difficulty(self):
 
         ### hide main menu page
 
@@ -132,7 +137,7 @@ class Interface:
         self.difficulty = "MEDIUM"
         self.general_treeview.set(self.difficulty_row, "column2", self.difficulty)
 
-    def load_hard_dif(self):
+    def load_hard_difficulty(self):
 
         ### hide main menu page
 
