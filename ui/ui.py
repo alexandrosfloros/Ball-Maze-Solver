@@ -10,7 +10,7 @@ class Interface:
         ### initialising window parameters
 
         self.master.title("Ball Maze Solver")
-        self.master.geometry("800x600")
+        self.master.geometry("1200x900")
         self.master.resizable(False, False)
 
         ### initialising page frames
