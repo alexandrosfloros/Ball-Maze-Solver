@@ -1,4 +1,6 @@
 from ui import *
+from ui import Interface
+import tkinter as tk
 
 def main():
     root = tk.Tk()
