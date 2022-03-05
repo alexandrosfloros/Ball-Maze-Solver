@@ -11,42 +11,42 @@ nodes = [
     [10.0, 2.0]
 ]
 
-### generates list of path intervals between nodes
-
-def get_path_intervals(nodes):
-
-    intervals = []
-
-    for n, node in enumerate(nodes):
-        if n == 0:
-            intervals.append(0.0)
-        else:
-            intervals.append(math.dist(node, nodes[n - 1]))
-
-    return intervals
-
-### generates list of path distances to each node
+### generates list of path distances between nodes
 
 def get_path_distances(nodes):
 
-    intervals = get_path_intervals(nodes)[1:] # removes interval of zero length
-    distances = [0.0]
+    path_distances = []
 
-    for n, interval in enumerate(intervals):
-        distances.append(interval + distances[n])
+    for n, node in enumerate(nodes):
+        if n == 0:
+            path_distances.append(0.0)
+        else:
+            path_distances.append(math.dist(node, nodes[n - 1]))
 
-    return distances
+    return path_distances
 
-### generates list of path percentages to each node
+### generates list of path lengths to each node
 
-def get_path_percentages(nodes):
+def get_path_lengths(nodes):
 
-    nodes_length = len(nodes)
-    path_distances = get_path_distances(nodes)
-    path_length = sum(get_path_intervals(nodes))
+    path_distances = get_path_distances(nodes)[1:] # removes distance of zero length
+    path_lengths = [0.0]
 
-    return [path_distances[n] / path_length for n in range(nodes_length)]
+    for n, distance in enumerate(path_distances):
+        path_lengths.append(distance + path_lengths[n])
 
-print("Intervals:", get_path_intervals(nodes))
-print("Distances:", get_path_distances(nodes))
-print("Percentages:", get_path_percentages(nodes))
+    return path_lengths
+
+### generates list of path length percentages to each node
+
+def get_path_length_percentages(nodes):
+
+    path_lengths = get_path_lengths(nodes)
+    total_path_length = sum(get_path_distances(nodes))
+    no_of_nodes = len(nodes)
+
+    return [path_lengths[n] / total_path_length for n in range(no_of_nodes)]
+
+print("Path distances:", get_path_distances(nodes))
+print("Path lengths:", get_path_lengths(nodes))
+print("Path length percentages:", get_path_length_percentages(nodes))
