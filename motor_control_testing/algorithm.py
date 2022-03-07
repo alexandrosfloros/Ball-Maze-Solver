@@ -36,8 +36,8 @@ class Ball:
         self.velocity = [0.0, 0.0]
         self.acceleration = [0.0, 0.0] # only used for simulation
 
-        self.max_speed = 0.01 # units/frame
-        self.min_speed = 0.001 # units/frame
+        self.max_speed = 0.075 # units/frame
+        self.min_speed = 0.01 # units/frame
 
         self.moving_x = True
         self.progress = 0
@@ -53,18 +53,18 @@ class Ball:
     # the ball moves in the x axis
 
     def move_xpos(self):
-        self.acceleration[0] = 0.0008 # acceleration is set manually, only used for simulation
+        self.acceleration[0] = 0.01 # acceleration is set manually, only used for simulation
 
     def move_xneg(self):
-        self.acceleration[0] = -0.0008 # acceleration is set manually, only used for simulation
+        self.acceleration[0] = -0.01 # acceleration is set manually, only used for simulation
     
     # the ball moves in the y axis
 
     def move_ypos(self):
-        self.acceleration[1] = 0.0008 # acceleration is set manually, only used for simulation
+        self.acceleration[1] = 0.01 # acceleration is set manually, only used for simulation
 
     def move_yneg(self):
-        self.acceleration[1] = -0.0008 # acceleration is set manually, only used for simulation
+        self.acceleration[1] = -0.01 # acceleration is set manually, only used for simulation
 
     # the ball is balanced as it moves in the x axis
 
@@ -112,7 +112,7 @@ class BallMazeAlgorithm:
         self.ball = ball
         self.nodes = nodes
         self.limit = len(self.nodes)
-        self.node_tolerance = 0.1 # units
+        self.node_tolerance = 1.0 # units
     
     """
     The following algorithm is being run every single frame and uses the ball position
