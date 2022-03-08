@@ -1,9 +1,7 @@
 import tkinter as tk
-from tkinter import HORIZONTAL, ttk
-from tkinter import ttk
+from tkinter import HORIZONTAL, ttk, messagebox
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from tkinter import messagebox
 import time
 
 
@@ -134,6 +132,7 @@ class Interface:
         ### reset value for solve time 
         self.constanttime = "00:00:0"
         self.general_treeview.set(self.time_row, "column2", self.constanttime)
+
         ### stops the timer when returning back to the main menu
         self.stop()
 
@@ -142,20 +141,12 @@ class Interface:
 
     def leave_to_main_menu(self):
 
-        ### hide puzzle page
-
-
-
         ### warning message 
         warning = messagebox.askyesno('Warning', 'Leaving will stop the current maze solving. Would you like to continue?')
         if warning == True:
             self.load_main_menu()
         else:
             self.puzzle_frame.pack()        
-
-        ### show main menu page
-
-
 
     def load_easy_difficulty(self):
 
@@ -237,17 +228,3 @@ class Interface:
         ### display the stop watch
         self.constanttime = '%02d:%02d:%01d' % (minutes, seconds, hseconds)
         self.general_treeview.set(self.time_row, "column2", self.constanttime)
-    
-
-
-
-
-
-
-
-
-
-
-
-    
-

@@ -50,3 +50,5 @@ def get_path_length_percentages(nodes):
 print("Path distances:", get_path_distances(nodes))
 print("Path lengths:", get_path_lengths(nodes))
 print("Path length percentages:", get_path_length_percentages(nodes))
+
+get_path_length_percentages(nodes)
