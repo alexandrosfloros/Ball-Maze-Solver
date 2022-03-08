@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import HORIZONTAL, ttk, messagebox
+from tkinter import ttk, messagebox
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import time
@@ -26,6 +26,7 @@ class Interface:
         self.puzzle_display_axes = self.puzzle_display_figure.add_axes([0, 0, 1, 1])
 
         ### placeholder maze path
+
         x = range(100)
         y = [i ** 2 for i in x]
         self.puzzle_display_axes.plot(x, y)
@@ -61,10 +62,10 @@ class Interface:
 
         ### initialising main menu widgets
 
-        self.main_menu_title = ttk.Label(self.main_menu_frame, text = "Autonomously Operated Maze", font=("Verdana", 24))
+        self.main_menu_title = ttk.Label(self.main_menu_frame, text = "Autonomously Operated Maze", font = ("Verdana", 24))
         self.main_menu_title.pack(pady=25)
 
-        self.main_menu_label = ttk.Label(self.main_menu_frame, text = "Select a maze difficulty:", font=("Verdana", 18))
+        self.main_menu_label = ttk.Label(self.main_menu_frame, text = "Select a maze difficulty:", font = ("Verdana", 18))
         self.main_menu_label.pack(pady = 50)
 
         self.easy_difficulty_button = ttk.Button(self.main_menu_frame, text = "Easy", width = 80, command = self.load_easy_difficulty) # select easy difficulty
@@ -90,7 +91,7 @@ class Interface:
         self.x_velocity_row = self.general_treeview.insert("", "end", values = ("X Velocity:", ""))
         self.y_velocity_row = self.general_treeview.insert("", "end", values = ("Y Velocity:", ""))
         self.time_row = self.general_treeview.insert("", "end", values = ("Solved Time:", ""))
-        self.average_time = self.general_treeview.insert("","end", values = ("Average Solve Time",""))
+        self.average_time = self.general_treeview.insert("","end", values = ("Average Solve Time", ""))
         self.progress_row = self.general_treeview.insert("", "end", values = ("Progress:", ""))
 
 
@@ -100,8 +101,8 @@ class Interface:
         self.state_treeview = ttk.Treeview(self.info_frame, columns = ("state", "time"), show = "headings", selectmode = "none") # contains state history of the motors
         self.state_treeview.heading("state", text = "State")
         self.state_treeview.heading("time", text = "Time")
-        self.state_treeview.column("state", width = 100)
-        self.state_treeview.column("time", width = 100)
+        self.state_treeview.column("state", width = 120)
+        self.state_treeview.column("time", width = 120)
         self.state_treeview.bind("<Button-1>", self.disable_treeview)
         self.state_treeview.pack(pady = 15)
 
@@ -115,6 +116,7 @@ class Interface:
         self.stop_button.pack(side = "right")
 
         ### initialising timer values
+
         self.start_time = None
         self.is_running = False
         self.sv = tk.StringVar()
@@ -129,24 +131,27 @@ class Interface:
 
         self.puzzle_frame.pack_forget()
 
-        ### reset value for solve time 
+        ### reset value for solve time
+
         self.constanttime = "00:00:0"
         self.general_treeview.set(self.time_row, "column2", self.constanttime)
 
         ### stops the timer when returning back to the main menu
+
         self.stop()
 
         ### show main menu page
+
         self.main_menu_frame.pack()
 
     def leave_to_main_menu(self):
 
-        ### warning message 
-        warning = messagebox.askyesno('Warning', 'Leaving will stop the current maze solving. Would you like to continue?')
-        if warning == True:
-            self.load_main_menu()
-        else:
-            self.puzzle_frame.pack()        
+        ### warning message
+
+        warning = messagebox.askyesno("Warning", "Leaving will stop the current maze solving. Would you like to leave?")
+
+        if warning:
+            self.load_main_menu()       
 
     def load_easy_difficulty(self):
 
@@ -226,5 +231,6 @@ class Interface:
         hseconds = int((elap - hours * 3600.0 - minutes * 60.0 - seconds) * 10)
 
         ### display the stop watch
+
         self.constanttime = '%02d:%02d:%01d' % (minutes, seconds, hseconds)
         self.general_treeview.set(self.time_row, "column2", self.constanttime)

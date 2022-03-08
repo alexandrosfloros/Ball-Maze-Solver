@@ -45,10 +45,8 @@ def get_path_length_percentages(nodes):
     total_path_length = sum(get_path_distances(nodes))
     no_of_nodes = len(nodes)
 
-    return [path_lengths[n] / total_path_length for n in range(no_of_nodes)]
+    return [path_lengths[n] * 100 / total_path_length for n in range(no_of_nodes)]
 
 print("Path distances:", get_path_distances(nodes))
 print("Path lengths:", get_path_lengths(nodes))
 print("Path length percentages:", get_path_length_percentages(nodes))
-
-get_path_length_percentages(nodes)

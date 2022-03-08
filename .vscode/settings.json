@@ -1,6 +1,0 @@
-{
-    "python.analysis.extraPaths": [
-        "./motor_control_testing",
-        "./motor_control_testing"
-    ]
-}
