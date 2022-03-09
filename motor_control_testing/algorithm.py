@@ -53,18 +53,18 @@ class Ball:
     # the ball moves in the x axis
 
     def move_xpos(self):
-        self.acceleration[0] = 0.01 # acceleration is set manually, only used for simulation
+        self.acceleration[0] = 0.007 # acceleration is set manually, only used for simulation
 
     def move_xneg(self):
-        self.acceleration[0] = -0.01 # acceleration is set manually, only used for simulation
+        self.acceleration[0] = -0.007 # acceleration is set manually, only used for simulation
     
     # the ball moves in the y axis
 
     def move_ypos(self):
-        self.acceleration[1] = 0.01 # acceleration is set manually, only used for simulation
+        self.acceleration[1] = 0.007 # acceleration is set manually, only used for simulation
 
     def move_yneg(self):
-        self.acceleration[1] = -0.01 # acceleration is set manually, only used for simulation
+        self.acceleration[1] = -0.007 # acceleration is set manually, only used for simulation
 
     # the ball is balanced as it moves in the x axis
 
