@@ -3,32 +3,37 @@ This is the file containing the algorithm used to control the motors (testing on
 """
 
 """
-Information from the Ball class:
+Information from the BallMazeAlgorithm class:
 
 Motor outputs:
 
 Motor in the y axis (moves the ball in x):
 
-Method           | Motor angle (absolute)
-self.equal_x()   | 0
-self.move_xpos() | +theta
-self.move_xneg() | -theta
+Method                | Motor angle (absolute)
+self.ball.equal_x()   | 0
+self.ball.move_xpos() | +theta
+self.ball.move_xneg() | -theta
 
 Motor in the x axis (moves the ball in y):
 
-Method           | Motor angle (absolute)
-self.equal_y()   | 0
-self.move_xpos() | +theta
-self.move_xneg() | -theta
+Method                | Motor angle (absolute)
+self.ball.equal_y()   | 0
+self.ball.move_xpos() | +theta
+self.ball.move_xneg() | -theta
 
 where theta is a very small angle (small acceleration)
 
-Display outputs:
+User interface outputs:
 
-Attribute        | Information
-self.position    | Ball position
-self.next_node   | Ball destination
+Attribute             | Information
+self.ball.position    | Ball position
+self.ball.next_node   | Ball destination
+
+self.game_won         | Whether the game is won
+self.game_lost        | Whether the game is lost
 """
+
+import math
 
 class Ball:
     def __init__(self, position):
@@ -36,7 +41,7 @@ class Ball:
         self.velocity = [0.0, 0.0]
         self.acceleration = [0.0, 0.0] # only used for simulation
 
-        self.max_speed = 0.075 # units/frame
+        self.max_speed = 0.1 # units/frame
         self.min_speed = 0.01 # units/frame
 
         self.moving_x = True
@@ -53,18 +58,18 @@ class Ball:
     # the ball moves in the x axis
 
     def move_xpos(self):
-        self.acceleration[0] = 0.007 # acceleration is set manually, only used for simulation
+        self.acceleration[0] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
 
     def move_xneg(self):
-        self.acceleration[0] = -0.007 # acceleration is set manually, only used for simulation
+        self.acceleration[0] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
     
     # the ball moves in the y axis
 
     def move_ypos(self):
-        self.acceleration[1] = 0.007 # acceleration is set manually, only used for simulation
+        self.acceleration[1] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
 
     def move_yneg(self):
-        self.acceleration[1] = -0.007 # acceleration is set manually, only used for simulation
+        self.acceleration[1] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
 
     # the ball is balanced as it moves in the x axis
 
@@ -108,11 +113,14 @@ class Ball:
         self.progress += 1
 
 class BallMazeAlgorithm:
-    def __init__(self, ball, nodes):
+    def __init__(self, ball, nodes, holes):
         self.ball = ball
         self.nodes = nodes
+        self.holes = holes
         self.limit = len(self.nodes)
         self.node_tolerance = 1.0 # units
+        self.game_won = False
+        self.game_lost = False
     
     """
     The following algorithm is being run every single frame and uses the ball position
@@ -120,65 +128,69 @@ class BallMazeAlgorithm:
     """
 
     def run(self):
-        if self.ball.progress < self.limit:
 
-            # coordinates of the next node
+        # coordinates of the next node
 
-            self.ball.next_node = self.nodes[self.ball.progress]
-            xn, yn = self.ball.next_node
+        self.ball.next_node = self.nodes[self.ball.progress]
+        xn, yn = self.ball.next_node
 
-            # coordinates of the ball
+        # coordinates of the ball
 
-            xb, yb = self.ball.position
+        xb, yb = self.ball.position
 
-            # the ball moves in a different axis every time
+        # the ball moves in a different axis every time
 
-            if self.ball.moving_x:
-                if xb < xn:
+        if self.ball.moving_x:
+            if xb < xn:
 
-                    # once the ball reaches a certain speed, the board stops tilting
+                # once the ball reaches a certain speed, the board stops tilting
 
-                    if self.ball.velocity[0] > self.ball.max_speed:
-                        self.ball.equal_x()
-                    else:
-                        self.ball.move_xpos()
+                if self.ball.velocity[0] > self.ball.max_speed:
+                    self.ball.equal_x()
                 else:
-
-                    # once the ball reaches a certain speed, the board stops tilting
-
-                    if self.ball.velocity[0] < -1 * self.ball.max_speed:
-                        self.ball.equal_x()
-                    else:
-                        self.ball.move_xneg()
-                
-                # the ball is close to the current node and the algorithm attempts to immobilise it in the x axis
-
-                if abs(xb - xn) < self.node_tolerance:
-                    self.ball.balance_x()
+                    self.ball.move_xpos()
             else:
-                if yb < yn:
 
-                    # once the ball reaches a certain speed, the board stops tilting
+                # once the ball reaches a certain speed, the board stops tilting
 
-                    if self.ball.velocity[1] > self.ball.max_speed:
-                        self.ball.equal_y()
-                    else:
-                        self.ball.move_ypos()
+                if self.ball.velocity[0] < -1 * self.ball.max_speed:
+                    self.ball.equal_x()
                 else:
-
-                    # once the ball reaches a certain speed, the board stops tilting
-
-                    if self.ball.velocity[1] < -1 * self.ball.max_speed:
-                        self.ball.equal_y()
-                    else:
-                        self.ball.move_yneg()
+                    self.ball.move_xneg()
                 
-                # the ball is close to the current node and the algorithm attempts to immobilise it in the y axis
+            # the ball is close to the current node and the algorithm attempts to immobilise it in the x axis
 
-                if abs(yb - yn) < self.node_tolerance:
-                    self.ball.balance_y()
+            if abs(xb - xn) < self.node_tolerance:
+                    self.ball.balance_x()
+        else:
+            if yb < yn:
 
-                    # the ball moves back to the starting node, only used for simulation
+                # once the ball reaches a certain speed, the board stops tilting
 
-                    if self.ball.progress == self.limit:
-                        self.ball.progress = 0
+                if self.ball.velocity[1] > self.ball.max_speed:
+                    self.ball.equal_y()
+                else:
+                    self.ball.move_ypos()
+            else:
+
+                # once the ball reaches a certain speed, the board stops tilting
+
+                if self.ball.velocity[1] < -1 * self.ball.max_speed:
+                    self.ball.equal_y()
+                else:
+                    self.ball.move_yneg()
+                
+            # the ball is close to the current node and the algorithm attempts to immobilise it in the y axis
+
+            if abs(yb - yn) < self.node_tolerance:
+                self.ball.balance_y()
+
+                # the game is won
+
+                if self.ball.progress == self.limit:
+                    self.game_won = True
+
+        # the game is lost
+
+        if any(math.dist(self.ball.position, h) < 0.75 for h in self.holes):
+            self.game_lost = True

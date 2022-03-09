@@ -18,7 +18,7 @@ def animate_model(model):
 
     def init():
         global algorithm
-        algorithm = BallMazeAlgorithm(model.ball, model.nodes)
+        algorithm = BallMazeAlgorithm(model.ball, model.nodes, model.holes)
 
         return model.init_path(ax)
 
@@ -33,7 +33,10 @@ def animate_model(model):
         
         algorithm.run()
         
+        if algorithm.game_won or algorithm.game_lost:
+            animation.event_source.stop()
+
         return model.update_ball(ax)
 
-    animation = FuncAnimation(fig, update, init_func = init, blit = True, interval = 20) # 50fps
+    animation = FuncAnimation(fig, update, init_func = init, blit = True, interval = 33) # 30fps
     plt.show()
