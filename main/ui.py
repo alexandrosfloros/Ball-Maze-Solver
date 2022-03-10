@@ -1,9 +1,13 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import time
-
+from algorithm import *
+# importing from other files
+from testbench import easy_nodes, medium_nodes, hard_nodes, easy_holes, medium_holes, hard_holes
+from graphics import BallMazeModel
 
 class Interface:
     def __init__(self, master):
@@ -25,10 +29,17 @@ class Interface:
         self.puzzle_display_figure = plt.figure(figsize = (5, 5))
         self.puzzle_display_axes = self.puzzle_display_figure.add_axes([0, 0, 1, 1])
 
+
+        ### maze animation
+        x, y = medium_nodes[0]
+        ball = Ball([x, y])
+        model = BallMazeModel(ball, medium_nodes, medium_holes)
+        self.animate_model(model)       
+
         ### placeholder maze path
 
-        x = range(100)
-        y = [i ** 2 for i in x]
+        #x = range(100)
+        #y = [i ** 2 for i in x]
         self.puzzle_display_axes.plot(x, y)
 
 
@@ -124,6 +135,37 @@ class Interface:
         ### starting on main menu by default
 
         self.load_main_menu()
+    
+    def animate_model(self, model):
+        fig = plt.figure()
+        ax = fig.add_axes([0, 0, 1, 1])
+
+    # initialising algorithm
+
+        def init():
+            global algorithm
+            algorithm = BallMazeAlgorithm(model.ball, model.nodes, model.holes)
+
+            return model.init_path(ax)
+
+    # updating algorithm in every frame
+
+        def update(frame_number):
+            algorithm.ball.position[0] += algorithm.ball.velocity[0]
+            algorithm.ball.position[1] += algorithm.ball.velocity[1]
+            
+            algorithm.ball.velocity[0] += algorithm.ball.acceleration[0]
+            algorithm.ball.velocity[1] += algorithm.ball.acceleration[1]
+            
+            algorithm.run()
+            
+            if algorithm.game_won or algorithm.game_lost:
+                animation.event_source.stop()
+
+            return model.update_ball(ax)
+
+        animation = FuncAnimation(self.puzzle_display_figure, update, init_func = init, blit = True, interval = 33) # 30fps
+        plt.show()
 
     def load_main_menu(self):
 

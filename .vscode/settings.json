@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./motor_control_testing"
+    ]
+}
