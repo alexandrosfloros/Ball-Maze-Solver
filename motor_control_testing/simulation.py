@@ -11,8 +11,6 @@ def animate_model(model):
     fig = plt.figure()
     ax = fig.add_axes([0, 0, 1, 1])
 
-    time = -1
-
     # initialising algorithm
 
     def init():
