@@ -25,7 +25,7 @@ class BallMazeModel:
 
         xh = [h[0] for h in self.holes]
         yh = [h[1] for h in self.holes]
-        holes = ax.plot(xh, yh, "ko", markersize = 24)
+        holes = ax.plot(xh, yh, "ko", markersize = 23)
         
         self.ball_pos, = ax.plot([self.ball.position[0]], [self.ball.position[1]], "go", markersize = 20)
         

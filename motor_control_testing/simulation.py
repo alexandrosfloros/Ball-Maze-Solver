@@ -5,7 +5,6 @@ This is the file used to simulate the maze using the algorithm independently (te
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-from graphics import *
 from algorithm import *
 
 def animate_model(model):
