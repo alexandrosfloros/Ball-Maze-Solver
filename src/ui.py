@@ -172,11 +172,13 @@ class Interface:
 
         self.animation = FuncAnimation(self.puzzle_display_figure, update, init_func = init, blit = True, interval = 33) # 30fps
 
-    def load_main_menu(self):
-
-        ### hide puzzle page
-
-        self.puzzle_frame.pack_forget()
+    def reset_animation(self):
+        try:
+            self.animation.event_source.stop()
+        except:
+            pass
+    
+    def reset_puzzle(self):
 
         ### reset value for solve time
 
@@ -187,12 +189,19 @@ class Interface:
 
         self.stop_timer()
 
-        ### stop the animation when returning back to the main menu
+        ### reset the animation
 
-        try:
-            self.animation.event_source.stop()
-        except:
-            pass
+        self.reset_animation()
+
+    def load_main_menu(self):
+
+        ### reset the animation
+
+        self.reset_puzzle()
+
+        ### hide puzzle page
+
+        self.puzzle_frame.pack_forget()
 
         ### show main menu page
 
@@ -202,10 +211,10 @@ class Interface:
 
         ### warning message
 
-        warning = messagebox.askyesno("Warning", "Leaving will stop the current maze solving. Would you like to leave?")
+        warning = messagebox.askyesno("Warning", "Leaving will stop the current puzzle solve. Would you like to proceed?")
 
         if warning:
-            self.load_main_menu()       
+            self.load_main_menu()
 
     def load_puzzle_menu(self, difficulty):
 
@@ -235,25 +244,31 @@ class Interface:
         if self.general_treeview.identify_region(event.x, event.y) == "separator" or self.state_treeview.identify_region(event.x, event.y) == "separator":
             return "break"
     
-    def start_animation(self, nodes, holes, simulated):
+    def start_puzzle(self, nodes, holes, simulated):
         x, y = nodes[0]
         ball = Ball([x, y])
         model = BallMazeModel(ball, nodes, holes)
         self.animate_model(model, simulated)
 
     def start(self, simulated):
-        if not self.timer_running:
-            
+        if self.timer_running:
+            warning = messagebox.askyesno("Warning", "Starting a new puzzle solve will stop the current puzzle solve. Would you like to proceed?")
+        
+            if warning:
+                self.reset_puzzle()
+                self.start(simulated)
+
+        else:    
             self.start_timer()
 
             if self.difficulty == "EASY":
-                self.start_animation(easy_nodes, easy_holes, simulated)
+                self.start_puzzle(easy_nodes, easy_holes, simulated)
 
             elif self.difficulty == "MEDIUM":
-                self.start_animation(medium_nodes, medium_holes, simulated)
+                self.start_puzzle(medium_nodes, medium_holes, simulated)
 
             else:
-                self.start_animation(hard_nodes, hard_holes, simulated)
+                self.start_puzzle(hard_nodes, hard_holes, simulated)
 
     def start_timer(self):
         self.start_time = time.time()
