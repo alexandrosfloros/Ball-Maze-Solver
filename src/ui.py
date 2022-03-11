@@ -161,14 +161,14 @@ class Interface:
             ### the ball reaches the end
 
             if self.algorithm.game_won:
-                self.animation.event_source.stop()
+                self.reset_animation()
                 messagebox.showinfo("Success!", "The puzzle solve was successful.")
             
             ### the ball falls into a hole
 
             elif self.algorithm.game_lost:
+                self.reset_animation()
                 messagebox.showinfo("Failure!", "The puzzle solve was not successful.")
-                self.animation.event_source.stop()
 
             return model.update_ball(self.puzzle_display_axes)
 
