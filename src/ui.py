@@ -87,7 +87,7 @@ class Interface:
         self.next_position_row = self.general_treeview.insert("", "end", values = ("Next Position:", ""))
         self.x_velocity_row = self.general_treeview.insert("", "end", values = ("X Velocity:", ""))
         self.y_velocity_row = self.general_treeview.insert("", "end", values = ("Y Velocity:", ""))
-        self.time_row = self.general_treeview.insert("", "end", values = ("Solved Time:", ""))
+        self.time_row = self.general_treeview.insert("", "end", values = ("Solve Time:", ""))
         self.average_time = self.general_treeview.insert("","end", values = ("Average Solve Time", ""))
         self.progress_row = self.general_treeview.insert("", "end", values = ("Progress:", ""))
 
@@ -161,13 +161,13 @@ class Interface:
             ### the ball reaches the end
 
             if self.algorithm.game_won:
-                self.reset_animation()
+                self.stop_puzzle()
                 messagebox.showinfo("Success!", "The puzzle solve was successful.")
             
             ### the ball falls into a hole
 
             elif self.algorithm.game_lost:
-                self.reset_animation()
+                self.stop_puzzle()
                 messagebox.showinfo("Failure!", "The puzzle solve was not successful.")
 
             return model.update_ball(self.puzzle_display_axes)
@@ -186,20 +186,22 @@ class Interface:
 
         self.constant_time = "00:00:0"
         self.general_treeview.set(self.time_row, "column2", self.constant_time)
+    
+    def stop_puzzle(self):
 
-        ### stop the timer when returning back to the main menu
+        ### stop timer when returning back to the main menu
 
         self.stop_timer()
 
-        ### reset the animation
+        ### reset animation
 
         self.reset_animation()
 
     def load_main_menu(self):
 
-        ### reset the animation
+        ### stop puzzle
 
-        self.reset_puzzle()
+        self.stop_puzzle()
 
         ### hide puzzle page
 
@@ -224,6 +226,15 @@ class Interface:
 
     def load_puzzle_menu(self, difficulty):
 
+        ### reset puzzle
+
+        self.reset_puzzle()
+
+        ### set puzzle difficulty
+
+        self.difficulty = difficulty
+        self.general_treeview.set(self.difficulty_row, "column2", self.difficulty)
+
         ### hide main menu page
 
         self.main_menu_frame.pack_forget()
@@ -231,11 +242,6 @@ class Interface:
         ### show puzzle page
 
         self.puzzle_frame.pack()
-
-        ### set puzzle difficulty
-
-        self.difficulty = difficulty
-        self.general_treeview.set(self.difficulty_row, "column2", self.difficulty)
     
     def load_easy_difficulty(self):
         self.load_puzzle_menu("EASY")
@@ -261,7 +267,7 @@ class Interface:
             warning = messagebox.askyesno("Warning!", "Starting a new puzzle solve will stop the current puzzle solve. Would you like to proceed?")
         
             if warning:
-                self.reset_puzzle()
+                self.stop_puzzle()
                 self.start(simulated)
 
         else:    
@@ -296,7 +302,7 @@ class Interface:
         seconds = int(elap - hours * 3600.0 - minutes * 60.0)
         hseconds = int((elap - hours * 3600.0 - minutes * 60.0 - seconds) * 10)
 
-        ### display the stop watch
+        ### display stop watch
 
         self.constant_time = "%02d:%02d:%01d" % (minutes, seconds, hseconds)
         self.general_treeview.set(self.time_row, "column2", self.constant_time)
