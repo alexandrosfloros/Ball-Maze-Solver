@@ -162,10 +162,12 @@ class Interface:
 
             if self.algorithm.game_won:
                 self.animation.event_source.stop()
+                messagebox.showinfo("Success!", "The puzzle solve was successful.")
             
             ### the ball falls into a hole
 
             elif self.algorithm.game_lost:
+                messagebox.showinfo("Failure!", "The puzzle solve was not successful.")
                 self.animation.event_source.stop()
 
             return model.update_ball(self.puzzle_display_axes)
@@ -211,9 +213,13 @@ class Interface:
 
         ### warning message
 
-        warning = messagebox.askyesno("Warning", "Leaving will stop the current puzzle solve. Would you like to proceed?")
+        if self.timer_running:
+            warning = messagebox.askyesno("Warning!", "Leaving will stop the current puzzle solve. Would you like to proceed?")
 
-        if warning:
+            if warning:
+                self.load_main_menu()
+        
+        else:
             self.load_main_menu()
 
     def load_puzzle_menu(self, difficulty):
@@ -252,7 +258,7 @@ class Interface:
 
     def start(self, simulated):
         if self.timer_running:
-            warning = messagebox.askyesno("Warning", "Starting a new puzzle solve will stop the current puzzle solve. Would you like to proceed?")
+            warning = messagebox.askyesno("Warning!", "Starting a new puzzle solve will stop the current puzzle solve. Would you like to proceed?")
         
             if warning:
                 self.reset_puzzle()
