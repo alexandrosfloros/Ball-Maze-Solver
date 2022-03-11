@@ -2,37 +2,6 @@
 This is the file containing the algorithm used to control the motors (testing only)
 """
 
-"""
-Information from the BallMazeAlgorithm class:
-
-Motor outputs:
-
-Motor in the y axis (moves the ball in x):
-
-Method                | Motor angle (absolute)
-self.ball.equal_x()   | 0
-self.ball.move_xpos() | +theta
-self.ball.move_xneg() | -theta
-
-Motor in the x axis (moves the ball in y):
-
-Method                | Motor angle (absolute)
-self.ball.equal_y()   | 0
-self.ball.move_xpos() | +theta
-self.ball.move_xneg() | -theta
-
-where theta is a very small angle (small acceleration)
-
-User interface outputs:
-
-Attribute             | Information
-self.ball.position    | Ball position
-self.ball.next_node   | Ball destination
-
-self.game_won         | Whether the game is won
-self.game_lost        | Whether the game is lost
-"""
-
 import math
 
 class Ball:

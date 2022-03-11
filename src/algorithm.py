@@ -1,5 +1,5 @@
 """
-This is the file containing the algorithm used to control the motors (testing only)
+This is the file containing the algorithm used to control the motors (can be modified to communicate with the other parts)
 """
 
 """
