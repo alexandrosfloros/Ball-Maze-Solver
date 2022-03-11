@@ -77,7 +77,7 @@ class Interface:
 
         ### initialising min speed combobox
 
-        self.min_speed_combobox = ttk.Combobox(self.min_speed_frame, values = (0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1), width = 5, state = "readonly")
+        self.min_speed_combobox = ttk.Combobox(self.min_speed_frame, values = (0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10), width = 5, state = "readonly")
         self.min_speed_combobox.pack(side = "left")
         self.min_speed_combobox.current(0)
 
@@ -124,10 +124,10 @@ class Interface:
 
         ### initialising main menu widgets
 
-        self.main_menu_title = ttk.Label(self.main_menu_frame, text = "Autonomously Operated Maze", font = ("Verdana", 24))
+        self.main_menu_title = ttk.Label(self.main_menu_frame, text = "Ball Maze Solver", font = ("Verdana", 24))
         self.main_menu_title.pack(pady=25)
 
-        self.main_menu_label = ttk.Label(self.main_menu_frame, text = "Select a maze difficulty:", font = ("Verdana", 18))
+        self.main_menu_label = ttk.Label(self.main_menu_frame, text = "Select a puzzle difficulty:", font = ("Verdana", 18))
         self.main_menu_label.pack(pady = 50)
 
         self.easy_difficulty_button = ttk.Button(self.main_menu_frame, text = "Easy", width = 80, command = self.load_easy_difficulty) # select easy difficulty
