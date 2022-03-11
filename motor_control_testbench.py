@@ -2,8 +2,8 @@
 This is the file used to run the algorithm independently (testing only)
 """
 
-from simulation import *
-from graphics import *
+from motor_control_testing.simulation import *
+from motor_control_testing.graphics import *
 
 # initialising path nodes
 
@@ -236,15 +236,17 @@ hard_holes = [
     [26.5, 4.2]
 ]
 
-# initialising ball position
+if __name__ == "__main__":
 
-x, y = medium_nodes[0]
-ball = Ball([x, y])
+    # initialising ball position
 
-# initialising graphics
+    x, y = medium_nodes[0]
+    ball = Ball([x, y])
 
-model = BallMazeModel(ball, medium_nodes, medium_holes)
+    # initialising graphics
 
-# initialising simulation
+    model = BallMazeModel(ball, medium_nodes, medium_holes)
 
-animate_model(model)
+    # initialising simulation
+
+    animate_model(model)

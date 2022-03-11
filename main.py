@@ -1,4 +1,4 @@
-from ui import *
+from src.ui import *
 
 def main():
     root = tk.Tk()

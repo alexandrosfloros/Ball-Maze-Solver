@@ -5,7 +5,7 @@ This is the file used to simulate the maze using the algorithm independently (te
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-from algorithm import *
+from motor_control_testing.algorithm import *
 
 def animate_model(model):
     fig = plt.figure()

@@ -1,13 +1,15 @@
+import time
+
 import tkinter as tk
 from tkinter import ttk, messagebox
+
 from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import time
-from algorithm import *
-# importing from other files
-from testbench import easy_nodes, medium_nodes, hard_nodes, easy_holes, medium_holes, hard_holes
-from graphics import BallMazeModel
+
+from motor_control_testbench import *
+from motor_control_testing.graphics import BallMazeModel
+from motor_control_testing.algorithm import *
 
 class Interface:
     def __init__(self, master):
@@ -16,7 +18,7 @@ class Interface:
         ### initialising window parameters
 
         self.master.title("Ball Maze Solver")
-        self.master.geometry("800x600")
+        self.master.geometry("1000x600")
         self.master.resizable(False, False)
 
         ### initialising page frames
@@ -26,22 +28,8 @@ class Interface:
 
         ### initialising puzzle display canvas
 
-        self.puzzle_display_figure = plt.figure(figsize = (5, 5))
+        self.puzzle_display_figure = plt.figure()
         self.puzzle_display_axes = self.puzzle_display_figure.add_axes([0, 0, 1, 1])
-
-
-        ### maze animation
-        x, y = medium_nodes[0]
-        ball = Ball([x, y])
-        model = BallMazeModel(ball, medium_nodes, medium_holes)
-        self.animate_model(model)       
-
-        ### placeholder maze path
-
-        #x = range(100)
-        #y = [i ** 2 for i in x]
-        self.puzzle_display_axes.plot(x, y)
-
 
         self.puzzle_display_canvas = FigureCanvasTkAgg(self.puzzle_display_figure, master = self.puzzle_frame)
         self.puzzle_display_canvas.get_tk_widget().pack(side = "left")
@@ -94,8 +82,6 @@ class Interface:
         self.general_treeview.column("column1", width = 140)
         self.general_treeview.column("column2", width = 100)
 
-
-
         self.difficulty_row = self.general_treeview.insert("", "end", values = ("Difficulty:", ""))
         self.current_position_row = self.general_treeview.insert("", "end", values = ("Current Position:", ""))
         self.next_position_row = self.general_treeview.insert("", "end", values = ("Next Position:", ""))
@@ -137,18 +123,16 @@ class Interface:
         self.load_main_menu()
     
     def animate_model(self, model):
-        fig = plt.figure()
-        ax = fig.add_axes([0, 0, 1, 1])
-
-    # initialising algorithm
+        
+        # initialising algorithm
 
         def init():
             global algorithm
             algorithm = BallMazeAlgorithm(model.ball, model.nodes, model.holes)
 
-            return model.init_path(ax)
+            return model.init_path(self.puzzle_display_axes)
 
-    # updating algorithm in every frame
+        # updating algorithm in every frame
 
         def update(frame_number):
             algorithm.ball.position[0] += algorithm.ball.velocity[0]
@@ -162,10 +146,9 @@ class Interface:
             if algorithm.game_won or algorithm.game_lost:
                 animation.event_source.stop()
 
-            return model.update_ball(ax)
+            return model.update_ball(self.puzzle_display_axes)
 
         animation = FuncAnimation(self.puzzle_display_figure, update, init_func = init, blit = True, interval = 33) # 30fps
-        plt.show()
 
     def load_main_menu(self):
 
@@ -175,8 +158,8 @@ class Interface:
 
         ### reset value for solve time
 
-        self.constanttime = "00:00:0"
-        self.general_treeview.set(self.time_row, "column2", self.constanttime)
+        self.constant_time = "00:00:0"
+        self.general_treeview.set(self.time_row, "column2", self.constant_time)
 
         ### stops the timer when returning back to the main menu
 
@@ -244,12 +227,26 @@ class Interface:
         if self.general_treeview.identify_region(event.x, event.y) == "separator" or self.state_treeview.identify_region(event.x, event.y) == "separator":
             return "break"
     
+    def start_animation(self, nodes, holes):
+        x, y = nodes[0]
+        ball = Ball([x, y])
+        model = BallMazeModel(ball, nodes, holes)
+        self.animate_model(model)
 
     def start(self):
         if not self.is_running:
             self.start_time = time.time()
             self.timer()
             self.is_running = True
+
+            if self.difficulty == "EASY":
+                self.start_animation(easy_nodes, easy_holes)
+
+            elif self.difficulty == "MEDIUM":
+                self.start_animation(medium_nodes, medium_holes)
+
+            else:
+                self.start_animation(hard_nodes, hard_holes)
 
     def timer(self):
         self.sv.set(self.format_time(time.time() - self.start_time))
@@ -260,12 +257,6 @@ class Interface:
             self.puzzle_frame.after_cancel(self.after_loop)
             self.is_running = False
 
-    def startstop(self, event=None):
-        if self.is_running:
-            self.stop()
-        else:
-            self.start()
-
     def format_time(self, elap):
         hours = int(elap / 3600)
         minutes = int(elap / 60 - hours * 60.0)
@@ -274,5 +265,5 @@ class Interface:
 
         ### display the stop watch
 
-        self.constanttime = '%02d:%02d:%01d' % (minutes, seconds, hseconds)
-        self.general_treeview.set(self.time_row, "column2", self.constanttime)
+        self.constant_time = "%02d:%02d:%01d" % (minutes, seconds, hseconds)
+        self.general_treeview.set(self.time_row, "column2", self.constant_time)
