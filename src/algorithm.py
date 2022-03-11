@@ -28,9 +28,6 @@ User interface outputs:
 Attribute             | Information
 self.ball.position    | Ball position
 self.ball.next_node   | Ball destination
-
-self.game_won         | Whether the game is won
-self.game_lost        | Whether the game is lost
 """
 
 import math

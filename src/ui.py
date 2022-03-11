@@ -105,50 +105,72 @@ class Interface:
 
         ### initialising settings widgets
 
-        self.start_button = ttk.Button(self.settings_frame, text = "Start", width = 15, command = self.start) # start the puzzle
+        self.start_button = ttk.Button(self.settings_frame, text = "Start", width = 12, command = lambda: self.start(simulated = False)) # start the real puzzle solve
         self.start_button.pack(side = "left")
         
+        self.simulate_button = ttk.Button(self.settings_frame, text = "Simulate", width = 12, command = lambda: self.start(simulated = True)) # start the simulated puzzle solve
+        self.simulate_button.pack(side = "left")
 
-        self.stop_button = ttk.Button(self.settings_frame, text = "Leave", width = 15, command = self.leave_to_main_menu) # stop the puzzle and go back to main menu
+        self.stop_button = ttk.Button(self.settings_frame, text = "Leave", width = 12, command = self.leave_to_main_menu) # stop the puzzle and go back to main menu
         self.stop_button.pack(side = "right")
 
         ### initialising timer values
 
         self.start_time = None
-        self.is_running = False
-        self.sv = tk.StringVar()
+        self.timer_running = False
+        self.timer_value = tk.StringVar()
 
         ### starting on main menu by default
 
         self.load_main_menu()
     
-    def animate_model(self, model):
+    def animate_model(self, model, simulated):
         
         # initialising algorithm
 
         def init():
-            global algorithm
-            algorithm = BallMazeAlgorithm(model.ball, model.nodes, model.holes)
+            self.algorithm = BallMazeAlgorithm(model.ball, model.nodes, model.holes)
 
             return model.init_path(self.puzzle_display_axes)
 
         # updating algorithm in every frame
 
         def update(frame_number):
-            algorithm.ball.position[0] += algorithm.ball.velocity[0]
-            algorithm.ball.position[1] += algorithm.ball.velocity[1]
+            if simulated:
+                self.algorithm.ball.position[0] += self.algorithm.ball.velocity[0]
+                self.algorithm.ball.position[1] += self.algorithm.ball.velocity[1]
             
-            algorithm.ball.velocity[0] += algorithm.ball.acceleration[0]
-            algorithm.ball.velocity[1] += algorithm.ball.acceleration[1]
+                self.algorithm.ball.velocity[0] += self.algorithm.ball.acceleration[0]
+                self.algorithm.ball.velocity[1] += self.algorithm.ball.acceleration[1]
             
-            algorithm.run()
+            else:
+
+                """
+                This is the loop for the real puzzle solve
+                The position of the ball is received by the image processing, one frame at a time
+                It is then assigned to the ball using:
+                
+                self.algorithm.ball.position[0] = ...
+                self.algorithm.ball.position[1] = ...
+
+                Then, the algorithm is run for that frame
+                """
             
-            if algorithm.game_won or algorithm.game_lost:
-                animation.event_source.stop()
+            self.algorithm.run()
+            
+            ### the ball reaches the end
+
+            if self.algorithm.game_won:
+                self.animation.event_source.stop()
+            
+            ### the ball falls into a hole
+
+            elif self.algorithm.game_lost:
+                self.animation.event_source.stop()
 
             return model.update_ball(self.puzzle_display_axes)
 
-        animation = FuncAnimation(self.puzzle_display_figure, update, init_func = init, blit = True, interval = 33) # 30fps
+        self.animation = FuncAnimation(self.puzzle_display_figure, update, init_func = init, blit = True, interval = 33) # 30fps
 
     def load_main_menu(self):
 
@@ -161,9 +183,16 @@ class Interface:
         self.constant_time = "00:00:0"
         self.general_treeview.set(self.time_row, "column2", self.constant_time)
 
-        ### stops the timer when returning back to the main menu
+        ### stop the timer when returning back to the main menu
 
-        self.stop()
+        self.stop_timer()
+
+        ### stop the animation when returning back to the main menu
+
+        try:
+            self.animation.event_source.stop()
+        except:
+            pass
 
         ### show main menu page
 
@@ -178,7 +207,7 @@ class Interface:
         if warning:
             self.load_main_menu()       
 
-    def load_easy_difficulty(self):
+    def load_puzzle_menu(self, difficulty):
 
         ### hide main menu page
 
@@ -190,72 +219,55 @@ class Interface:
 
         ### set puzzle difficulty
 
-        self.difficulty = "EASY"
+        self.difficulty = difficulty
         self.general_treeview.set(self.difficulty_row, "column2", self.difficulty)
+    
+    def load_easy_difficulty(self):
+        self.load_puzzle_menu("EASY")
 
     def load_medium_difficulty(self):
-
-        ### hide main menu page
-
-        self.main_menu_frame.pack_forget()
-
-        ### show puzzle page
-
-        self.puzzle_frame.pack()
-
-        ### set puzzle difficulty
-
-        self.difficulty = "MEDIUM"
-        self.general_treeview.set(self.difficulty_row, "column2", self.difficulty)
+        self.load_puzzle_menu("MEDIUM")
 
     def load_hard_difficulty(self):
-
-        ### hide main menu page
-
-        self.main_menu_frame.pack_forget()
-
-        ### show puzzle page
-
-        self.puzzle_frame.pack()
-
-        ### set puzzle difficulty
-        
-        self.difficulty = "HARD"
-        self.general_treeview.set(self.difficulty_row, "column2", self.difficulty)
+        self.load_puzzle_menu("HARD")
 
     def disable_treeview(self, event):
         if self.general_treeview.identify_region(event.x, event.y) == "separator" or self.state_treeview.identify_region(event.x, event.y) == "separator":
             return "break"
     
-    def start_animation(self, nodes, holes):
+    def start_animation(self, nodes, holes, simulated):
         x, y = nodes[0]
         ball = Ball([x, y])
         model = BallMazeModel(ball, nodes, holes)
-        self.animate_model(model)
+        self.animate_model(model, simulated)
 
-    def start(self):
-        if not self.is_running:
-            self.start_time = time.time()
-            self.timer()
-            self.is_running = True
+    def start(self, simulated):
+        if not self.timer_running:
+            
+            self.start_timer()
 
             if self.difficulty == "EASY":
-                self.start_animation(easy_nodes, easy_holes)
+                self.start_animation(easy_nodes, easy_holes, simulated)
 
             elif self.difficulty == "MEDIUM":
-                self.start_animation(medium_nodes, medium_holes)
+                self.start_animation(medium_nodes, medium_holes, simulated)
 
             else:
-                self.start_animation(hard_nodes, hard_holes)
+                self.start_animation(hard_nodes, hard_holes, simulated)
 
+    def start_timer(self):
+        self.start_time = time.time()
+        self.timer()
+        self.timer_running = True
+    
     def timer(self):
-        self.sv.set(self.format_time(time.time() - self.start_time))
+        self.timer_value.set(self.format_time(time.time() - self.start_time))
         self.after_loop = self.puzzle_frame.after(50, self.timer)
 
-    def stop(self):
-        if self.is_running:
+    def stop_timer(self):
+        if self.timer_running:
             self.puzzle_frame.after_cancel(self.after_loop)
-            self.is_running = False
+            self.timer_running = False
 
     def format_time(self, elap):
         hours = int(elap / 3600)
