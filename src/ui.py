@@ -26,13 +26,76 @@ class Interface:
         self.main_menu_frame = ttk.Frame(self.master)
         self.puzzle_frame = ttk.Frame(self.master)
 
+        ### initialising puzzle display frame
+
+        self.puzzle_display_frame = ttk.Frame(self.puzzle_frame)
+        self.puzzle_display_frame.pack(side = "left")
+
         ### initialising puzzle display canvas
 
         self.puzzle_display_figure = plt.figure()
         self.puzzle_display_axes = self.puzzle_display_figure.add_axes([0, 0, 1, 1])
 
-        self.puzzle_display_canvas = FigureCanvasTkAgg(self.puzzle_display_figure, master = self.puzzle_frame)
-        self.puzzle_display_canvas.get_tk_widget().pack(side = "left")
+        self.puzzle_display_canvas = FigureCanvasTkAgg(self.puzzle_display_figure, master = self.puzzle_display_frame)
+        self.puzzle_display_canvas.get_tk_widget().pack()
+
+        ### initialising settings label
+
+        self.settings_label = ttk.Label(self.puzzle_display_frame, text = "Algorithm Settings")
+        self.settings_label.pack(fill = tk.X, pady = 5)
+
+        ### initialising settings frame
+
+        self.settings_frame = ttk.Frame(self.puzzle_display_frame)
+        self.settings_frame.pack(fill = tk.X, pady = 5)
+
+        ### initialising node tolerance frame
+
+        self.node_tolerance_frame = ttk.Frame(self.settings_frame)
+        self.node_tolerance_frame.pack(side = "left", padx = 5)
+
+        ### initialising node telerance label
+
+        self.node_tolerance_label = ttk.Label(self.node_tolerance_frame, text = "Node Tolerance")
+        self.node_tolerance_label.pack(side = "left")
+
+        ### initialising node tolerance combobox
+
+        self.node_tolerance_combobox = ttk.Combobox(self.node_tolerance_frame, values = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0), width = 5, state = "readonly")
+        self.node_tolerance_combobox.pack(side = "left")
+        self.node_tolerance_combobox.current(9)
+
+        ### initialising min speed frame
+
+        self.min_speed_frame = ttk.Frame(self.settings_frame)
+        self.min_speed_frame.pack(side = "left", padx = 5)
+
+        ### initialising min speed label
+
+        self.min_speed_label = ttk.Label(self.min_speed_frame, text = "Min Speed")
+        self.min_speed_label.pack(side = "left")
+
+        ### initialising min speed combobox
+
+        self.min_speed_combobox = ttk.Combobox(self.min_speed_frame, values = (0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1), width = 5, state = "readonly")
+        self.min_speed_combobox.pack(side = "left")
+        self.min_speed_combobox.current(0)
+
+        ### initialising max speed frame
+
+        self.max_speed_frame = ttk.Frame(self.settings_frame)
+        self.max_speed_frame.pack(side = "left", padx = 5)
+
+        ### initialising max speed label
+
+        self.max_speed_label = ttk.Label(self.max_speed_frame, text = "Max Speed")
+        self.max_speed_label.pack(side = "left")
+
+        ### initialising max speed combobox
+
+        self.max_speed_combobox = ttk.Combobox(self.max_speed_frame, values = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0), width = 5, state = "readonly")
+        self.max_speed_combobox.pack(side = "left")
+        self.max_speed_combobox.current(0)
 
         ### initialising puzzle data frame
 
@@ -49,15 +112,15 @@ class Interface:
         self.info_frame = ttk.Frame(self.puzzle_data_frame)
         self.info_frame.pack()
 
-        ### initialising settings label
+        ### initialising options label
 
-        self.settings_label = ttk.Label(self.puzzle_data_frame, text = "Puzzle Settings")
-        self.settings_label.pack()
+        self.options_label = ttk.Label(self.puzzle_data_frame, text = "Puzzle Options")
+        self.options_label.pack()
 
-        ### initialising settings frame
+        ### initialising options frame
 
-        self.settings_frame = ttk.Frame(self.puzzle_data_frame)
-        self.settings_frame.pack()
+        self.options_frame = ttk.Frame(self.puzzle_data_frame)
+        self.options_frame.pack()
 
         ### initialising main menu widgets
 
@@ -103,16 +166,16 @@ class Interface:
         self.state_treeview.bind("<Button-1>", self.disable_treeview)
         self.state_treeview.pack(pady = 15)
 
-        ### initialising settings widgets
+        ### initialising options widgets
 
-        self.start_button = ttk.Button(self.settings_frame, text = "Start", width = 12, command = lambda: self.start(simulated = False)) # start the real puzzle solve
+        self.start_button = ttk.Button(self.options_frame, text = "Start", width = 12, command = lambda: self.start(simulated = False)) # start the real puzzle solve
         self.start_button.pack(side = "left")
         
-        self.simulate_button = ttk.Button(self.settings_frame, text = "Simulate", width = 12, command = lambda: self.start(simulated = True)) # start the simulated puzzle solve
+        self.simulate_button = ttk.Button(self.options_frame, text = "Simulate", width = 12, command = lambda: self.start(simulated = True)) # start the simulated puzzle solve
         self.simulate_button.pack(side = "left")
 
-        self.stop_button = ttk.Button(self.settings_frame, text = "Leave", width = 12, command = self.leave_to_main_menu) # stop the puzzle and go back to main menu
-        self.stop_button.pack(side = "right")
+        self.stop_button = ttk.Button(self.options_frame, text = "Leave", width = 12, command = self.leave_to_main_menu) # stop the puzzle and go back to main menu
+        self.stop_button.pack(side = "left")
 
         ### initialising timer values
 
@@ -130,6 +193,9 @@ class Interface:
 
         def init():
             self.algorithm = BallMazeAlgorithm(model.ball, model.nodes, model.holes)
+            self.algorithm.node_tolerance = float(self.node_tolerance_combobox.get())
+            self.algorithm.ball.max_speed = float(self.max_speed_combobox.get())
+            self.algorithm.ball.min_speed = float(self.min_speed_combobox.get())
 
             return model.init_path(self.puzzle_display_axes)
 
