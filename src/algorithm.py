@@ -9,25 +9,26 @@ Motor outputs:
 
 Motor in the y axis (moves the ball in x):
 
-Method                | Motor angle (absolute)
-self.ball.equal_x()   | 0
-self.ball.move_xpos() | +theta
-self.ball.move_xneg() | -theta
+Method                 | Motor angle (absolute)
+self.ball.equal_x()    | 0
+self.ball.move_xpos()  | +theta
+self.ball.move_xneg()  | -theta
 
 Motor in the x axis (moves the ball in y):
 
-Method                | Motor angle (absolute)
-self.ball.equal_y()   | 0
-self.ball.move_xpos() | +theta
-self.ball.move_xneg() | -theta
+Method                 | Motor angle (absolute)
+self.ball.equal_y()    | 0
+self.ball.move_ypos()  | +theta
+self.ball.move_yneg()  | -theta
 
 where theta is a very small angle (small acceleration)
 
 User interface outputs:
 
-Attribute             | Information
-self.ball.position    | Ball position
-self.ball.next_node   | Ball destination
+Attribute              | Information
+self.ball.position     | Ball position
+self.ball.velocity     | Ball velocity
+self.ball.next_node    | Ball destination
 """
 
 import math
