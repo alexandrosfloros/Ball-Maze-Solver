@@ -29,7 +29,7 @@ Attribute                   | Information
 self.ball.position          | Ball position
 self.ball.velocity          | Ball velocity
 self.ball.next_node         | Ball destination
-self.motor                  | Motor position
+self.motor_state            | Motor position
 """
 
 import math
@@ -49,31 +49,31 @@ class Ball:
     # the board is not tilting
     
     def motor_zero_x(self):
-        self.motor = "ZERO_X"
+        self.motor_state = "ZERO_X"
         self.acceleration[0] = 0.0 # acceleration is set manually, only used for simulation
 
     def motor_zero_y(self):
-        self.motor = "ZERO_Y"
+        self.motor_state = "ZERO_Y"
         self.acceleration[1] = 0.0 # acceleration is set manually, only used for simulation
 
     # the ball moves in the x axis
 
     def motor_pos_x(self):
-        self.motor = "POS_X"
+        self.motor_state = "POS_X"
         self.acceleration[0] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
 
     def motor_neg_x(self):
-        self.motor = "NEG_X"
+        self.motor_state = "NEG_X"
         self.acceleration[0] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
     
     # the ball moves in the y axis
 
     def motor_pos_y(self):
-        self.motor = "POS_Y"
+        self.motor_state = "POS_Y"
         self.acceleration[1] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
 
     def motor_neg_y(self):
-        self.motor = "NEG_Y"
+        self.motor_state = "NEG_Y"
         self.acceleration[1] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
 
     # the ball is balanced as it moves in the x axis
