@@ -9,26 +9,27 @@ Motor outputs:
 
 Motor in the y axis (moves the ball in x):
 
-Method                 | Motor angle (absolute)
-self.ball.equal_x()    | 0
-self.ball.move_xpos()  | +theta
-self.ball.move_xneg()  | -theta
+Method                      | Motor angle (absolute)
+self.ball.motor_zero_x()    | 0
+self.ball.motor_pos_x()      | +theta
+self.ball.motor_neg_x()      | -theta
 
 Motor in the x axis (moves the ball in y):
 
-Method                 | Motor angle (absolute)
-self.ball.equal_y()    | 0
-self.ball.move_ypos()  | +theta
-self.ball.move_yneg()  | -theta
+Method                      | Motor angle (absolute)
+self.ball.motor_zero_y()    | 0
+self.ball.motor_pos_y()      | +theta
+self.ball.motor_neg_y()      | -theta
 
 where theta is a very small angle (small acceleration)
 
 User interface outputs:
 
-Attribute              | Information
-self.ball.position     | Ball position
-self.ball.velocity     | Ball velocity
-self.ball.next_node    | Ball destination
+Attribute                   | Information
+self.ball.position          | Ball position
+self.ball.velocity          | Ball velocity
+self.ball.next_node         | Ball destination
+self.motor                  | Motor position
 """
 
 import math
@@ -47,26 +48,32 @@ class Ball:
     
     # the board is not tilting
     
-    def equal_x(self):
+    def motor_zero_x(self):
+        self.motor = "ZERO_X"
         self.acceleration[0] = 0.0 # acceleration is set manually, only used for simulation
 
-    def equal_y(self):
+    def motor_zero_y(self):
+        self.motor = "ZERO_Y"
         self.acceleration[1] = 0.0 # acceleration is set manually, only used for simulation
 
     # the ball moves in the x axis
 
-    def move_xpos(self):
+    def motor_pos_x(self):
+        self.motor = "POS_X"
         self.acceleration[0] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
 
-    def move_xneg(self):
+    def motor_neg_x(self):
+        self.motor = "NEG_X"
         self.acceleration[0] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
     
     # the ball moves in the y axis
 
-    def move_ypos(self):
+    def motor_pos_y(self):
+        self.motor = "POS_Y"
         self.acceleration[1] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
 
-    def move_yneg(self):
+    def motor_neg_y(self):
+        self.motor = "NEG_Y"
         self.acceleration[1] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
 
     # the ball is balanced as it moves in the x axis
@@ -76,11 +83,11 @@ class Ball:
         # once the ball reaches an approximately zero speed, the board stops tilting
 
         if self.velocity[0] > self.min_speed:
-            self.move_xneg()
+            self.motor_neg_x()
         elif self.velocity[0] < -1 * self.min_speed:
-            self.move_xpos()
+            self.motor_pos_x()
         else:
-            self.equal_x()
+            self.motor_zero_x()
 
             self.stop_x()
 
@@ -91,11 +98,11 @@ class Ball:
         # once the ball reaches an approximately zero speed, the board stops tilting
 
         if self.velocity[1] > self.min_speed:
-            self.move_yneg()
+            self.motor_neg_y()
         elif self.velocity[1] < -1 * self.min_speed:
-            self.move_ypos()
+            self.motor_pos_y()
         else:
-            self.equal_y()
+            self.motor_zero_y()
             
             self.stop_y()
 
@@ -144,17 +151,17 @@ class BallMazeAlgorithm:
                 # once the ball reaches a certain speed, the board stops tilting
 
                 if self.ball.velocity[0] > self.ball.max_speed:
-                    self.ball.equal_x()
+                    self.ball.motor_zero_x()
                 else:
-                    self.ball.move_xpos()
+                    self.ball.motor_pos_x()
             else:
 
                 # once the ball reaches a certain speed, the board stops tilting
 
                 if self.ball.velocity[0] < -1 * self.ball.max_speed:
-                    self.ball.equal_x()
+                    self.ball.motor_zero_x()
                 else:
-                    self.ball.move_xneg()
+                    self.ball.motor_neg_x()
                 
             # the ball is close to the current node and the algorithm attempts to immobilise it in the x axis
 
@@ -166,17 +173,17 @@ class BallMazeAlgorithm:
                 # once the ball reaches a certain speed, the board stops tilting
 
                 if self.ball.velocity[1] > self.ball.max_speed:
-                    self.ball.equal_y()
+                    self.ball.motor_zero_y()
                 else:
-                    self.ball.move_ypos()
+                    self.ball.motor_pos_y()
             else:
 
                 # once the ball reaches a certain speed, the board stops tilting
 
                 if self.ball.velocity[1] < -1 * self.ball.max_speed:
-                    self.ball.equal_y()
+                    self.ball.motor_zero_y()
                 else:
-                    self.ball.move_yneg()
+                    self.ball.motor_neg_y()
                 
             # the ball is close to the current node and the algorithm attempts to immobilise it in the y axis
 
