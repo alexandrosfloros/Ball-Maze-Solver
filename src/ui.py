@@ -157,11 +157,11 @@ class Interface:
         self.general_treeview.bind("<Button-1>", self.disable_treeview)
         self.general_treeview.pack()
 
-        self.state_treeview = ttk.Treeview(self.info_frame, columns = ("state", "time"), show = "headings", selectmode = "none") # contains state history of the motors
+        self.state_treeview = ttk.Treeview(self.info_frame, columns = ("state", "timestamp"), show = "headings", selectmode = "none") # contains state history of the motors
         self.state_treeview.heading("state", text = "State")
-        self.state_treeview.heading("time", text = "Time")
+        self.state_treeview.heading("timestamp", text = "Timestamp")
         self.state_treeview.column("state", width = 120)
-        self.state_treeview.column("time", width = 120)
+        self.state_treeview.column("timestamp", width = 120)
         self.state_treeview.bind("<Button-1>", self.disable_treeview)
         self.state_treeview.pack(pady = 15)
 
