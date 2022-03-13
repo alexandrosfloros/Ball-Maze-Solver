@@ -8,8 +8,9 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from motor_control_testbench import *
-from motor_control_testing.graphics import BallMazeModel
+from motor_control_testing.graphics import *
 from src.algorithm import *
+from src.node_functions import *
 
 class Interface:
     def __init__(self, master):
@@ -223,6 +224,20 @@ class Interface:
             
             self.algorithm.run()
             
+            # table values are updated
+
+            self.general_treeview.set(self.x_position_row, "column2", round(self.algorithm.ball.position[0], 2))
+            self.general_treeview.set(self.y_position_row, "column2", round(self.algorithm.ball.position[1], 2))
+            self.general_treeview.set(self.x_velocity_row, "column2", round(self.algorithm.ball.velocity[0], 2))
+            self.general_treeview.set(self.y_velocity_row, "column2", round(self.algorithm.ball.velocity[1], 2))
+            self.general_treeview.set(self.progress_row, "column2", f"{round(get_path_length_percentages(model.nodes)[self.algorithm.ball.progress - 1], 2)}%")
+
+            if frame_number == 0:
+                self.previous_motor_state = ""
+            elif frame_number > 0 and self.previous_motor_state != self.algorithm.ball.motor_state:
+                self.previous_motor_state = self.algorithm.ball.motor_state
+                self.insert_motor_state(self.algorithm.ball.motor_state, self.constant_time)
+
             # the ball reaches the end
 
             if self.algorithm.game_won:
@@ -234,17 +249,6 @@ class Interface:
             elif self.algorithm.game_lost:
                 self.stop_puzzle()
                 messagebox.showinfo("Failure!", "The puzzle solve was not successful.")
-
-            if frame_number == 0:
-                self.previous_motor_state = ""
-            elif frame_number > 0 and self.previous_motor_state != self.algorithm.ball.motor_state:
-                self.previous_motor_state = self.algorithm.ball.motor_state
-                self.insert_motor_state(self.algorithm.ball.motor_state, self.constant_time)
-
-            self.general_treeview.set(self.x_position_row, "column2", round(self.algorithm.ball.position[0], 2))
-            self.general_treeview.set(self.y_position_row, "column2", round(self.algorithm.ball.position[1], 2))
-            self.general_treeview.set(self.x_velocity_row, "column2", round(self.algorithm.ball.velocity[0], 2))
-            self.general_treeview.set(self.y_velocity_row, "column2", round(self.algorithm.ball.velocity[1], 2))
 
             return model.update_ball(self.puzzle_display_axes)
 
@@ -262,6 +266,7 @@ class Interface:
         self.general_treeview.set(self.y_position_row, "column2", "")
         self.general_treeview.set(self.x_velocity_row, "column2", "")
         self.general_treeview.set(self.y_velocity_row, "column2", "")
+        self.general_treeview.set(self.progress_row, "column2", "")
         self.general_treeview.set(self.time_row, "column2", "00:00:0")
 
         # reset state treeview
