@@ -1,70 +1,114 @@
-/*Example sketch to control a stepper motor with A4988 stepper motor driver and Arduino without a library. More info: https://www.makerguides.com */
+// Include the AccelStepper library:
+#include <AccelStepper.h>
 
 // Define stepper motor connections and steps per revolution:
-#define dirPin 2
-#define stepPin 3
-#define stepsPerRevolution 200
+#define dirPin_1 2
+#define stepPin_1 3
+#define dirPin_2 5
+#define stepPin_2 6
+#define motorInterfaceType 1
+int angle;
+String inByte;
+
+// Create a new instance of the AccelStepper class:
+AccelStepper stepper_1 = AccelStepper(motorInterfaceType, stepPin_1, dirPin_1);
+AccelStepper stepper_2 = AccelStepper(motorInterfaceType, stepPin_2, dirPin_2);
 
 void setup() {
-  // Declare pins as output:
-  pinMode(stepPin, OUTPUT);
-  pinMode(dirPin, OUTPUT);
+  // Set the maximum speed in steps per second:
+  stepper_1.setMaxSpeed(500);
+  stepper_2.setMaxSpeed(500);
+  
 }
 
 void loop() {
-  // Set the spinning direction clockwise:
-  digitalWrite(dirPin, HIGH);
 
-  // Spin the stepper motor 1 revolution slowly:
-  for (int i = 0; i < stepsPerRevolution; i++) {
-    // These four lines result in 1 step:
-    digitalWrite(stepPin, HIGH);
-    delayMicroseconds(2000);
-    digitalWrite(stepPin, LOW);
-    delayMicroseconds(2000);
-  }
+// Set the current position to 0:
+  stepper_1.setCurrentPosition(0);
+  stepper_1.setCurrentPosition(0);
 
-  delay(1000);
+if(Serial.available()) { 
+    inByte = Serial.readStringUntil('\n'); //receive the signals from python files
+    angle = inByte.toInt();//convert strings into integer
 
-  // Set the spinning direction counterclockwise:
-  digitalWrite(dirPin, LOW);
+    if(angle = 1) {
+      // clockwise rotate 36 degrees
+      while(stepper_1.currentPosition() != 20)
+      {
+      stepper_1.setSpeed(50);
+      stepper_1.runSpeed();
+      }
+    }
 
-  // Spin the stepper motor 1 revolution quickly:
-  for (int i = 0; i < stepsPerRevolution; i++) {
-    // These four lines result in 1 step:
-    digitalWrite(stepPin, HIGH);
-    delayMicroseconds(1000);
-    digitalWrite(stepPin, LOW);
-    delayMicroseconds(1000);
-  }
+    if(angle = 2) {
+      // return to 0 degree
+      // detect the motor current position
+      if (stepper_1.currentPosition() == 20){
+        while(stepper_1.currentPosition() != 0)
+        {
+        stepper_1.setSpeed(-50);
+        stepper_1.runSpeed();
+        }
+      }
+      if (stepper_1.currentPosition() == -20){
+        while(stepper_1.currentPosition() != 0)
+        {
+        stepper_1.setSpeed(50);
+        stepper_1.runSpeed();
+        }
+      }
+    }
 
-  delay(1000);
+    if (angle = 3) {
+      // anti-clockwise rotate 36 degrees
+      while(stepper_1.currentPosition() != -20)
+      {
+      stepper_1.setSpeed(-50);
+      stepper_1.runSpeed();
+      }
+    }
 
-  // Set the spinning direction clockwise:
-  digitalWrite(dirPin, HIGH);
+    if(angle = -1) {
+      // clockwise rotate 36 degrees
+      while(stepper_2.currentPosition() != 20)
+      {
+      stepper_2.setSpeed(50);
+      stepper_2.runSpeed();
+      }
+    }
 
-  // Spin the stepper motor 5 revolutions fast:
-  for (int i = 0; i < 5 * stepsPerRevolution; i++) {
-    // These four lines result in 1 step:
-    digitalWrite(stepPin, HIGH);
-    delayMicroseconds(500);
-    digitalWrite(stepPin, LOW);
-    delayMicroseconds(500);
-  }
+    if(angle = -2) {
+      // return to 0 degree
+      // detect the motor current position
+      if (stepper_2.currentPosition() == 20){
+        while(stepper_2.currentPosition() != 0)
+        {
+        stepper_2.setSpeed(-50);
+        stepper_2.runSpeed();
+        }
+      }
+      if (stepper_2.currentPosition() == -20){
+        while(stepper_2.currentPosition() != 0)
+        {
+        stepper_2.setSpeed(50);
+        stepper_2.runSpeed();
+        }
+      }
+    }
 
-  delay(1000);
+    if (angle = -3) {
+      // anti-clockwise rotate 36 degrees
+      while(stepper_2.currentPosition() != -20)
+      {
+      stepper_2.setSpeed(-50);
+      stepper_2.runSpeed();
+      }
+    }
 
-  // Set the spinning direction counterclockwise:
-  digitalWrite(dirPin, LOW);
-
-  //Spin the stepper motor 5 revolutions fast:
-  for (int i = 0; i < 5 * stepsPerRevolution; i++) {
-    // These four lines result in 1 step:
-    digitalWrite(stepPin, HIGH);
-    delayMicroseconds(500);
-    digitalWrite(stepPin, LOW);
-    delayMicroseconds(500);
-  }
-
-  delay(1000);
+    Serial.flush();
+    // already tried several values for the delay function
+    delay(15);
 }
+}
+
+  
