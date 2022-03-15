@@ -1,7 +1,7 @@
 import time
 
 import tkinter as tk
-from tkinter import HORIZONTAL, ttk, messagebox
+from tkinter import ttk, messagebox
 
 from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
@@ -16,23 +16,23 @@ class Interface:
     def __init__(self, master):
         self.master = master
 
-        # initialising window parameters
+        # initialise window parameters
 
         self.master.title("Ball Maze Solver")
         self.master.geometry("1000x650")
         self.master.resizable(False, False)
 
-        # initialising page frames
+        # initialise page frames
 
         self.main_menu_frame = ttk.Frame(self.master)
         self.puzzle_frame = ttk.Frame(self.master)
 
-        # initialising puzzle display frame
+        # initialise puzzle display frame
 
         self.puzzle_display_frame = ttk.Frame(self.puzzle_frame)
         self.puzzle_display_frame.pack(side = "left")
 
-        # initialising puzzle display canvas
+        # initialise puzzle display canvas
 
         self.puzzle_display_figure = plt.figure()
         self.puzzle_display_axes = self.puzzle_display_figure.add_axes([0, 0, 1, 1])
@@ -40,100 +40,100 @@ class Interface:
         self.puzzle_display_canvas = FigureCanvasTkAgg(self.puzzle_display_figure, master = self.puzzle_display_frame)
         self.puzzle_display_canvas.get_tk_widget().pack()
 
-        # initialising settings label
+        # initialise settings label
 
         self.settings_label = ttk.Label(self.puzzle_display_frame, text = "Algorithm Settings")
         self.settings_label.pack(fill = tk.X, pady = 5)
 
-        # initialising settings frame
+        # initialise settings frame
 
         self.settings_frame = ttk.Frame(self.puzzle_display_frame)
         self.settings_frame.pack(fill = tk.X, pady = 5)
 
-        # initialising node tolerance frame
+        # initialise node tolerance frame
 
         self.node_tolerance_frame = ttk.Frame(self.settings_frame)
         self.node_tolerance_frame.pack(side = "left", padx = 5)
 
-        # initialising node tolerance label
+        # initialise node tolerance label
 
         self.node_tolerance_label = ttk.Label(self.node_tolerance_frame, text = "Node Tolerance")
         self.node_tolerance_label.pack(side = "left")
 
-        # initialising node tolerance combobox
+        # initialise node tolerance combobox
 
         self.node_tolerance_combobox = ttk.Combobox(self.node_tolerance_frame, values = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0), width = 5, state = "readonly")
         self.node_tolerance_combobox.pack(side = "left")
         self.node_tolerance_combobox.current(9)
 
-        # initialising min speed frame
+        # initialise min speed frame
 
         self.min_speed_frame = ttk.Frame(self.settings_frame)
         self.min_speed_frame.pack(side = "left", padx = 5)
 
-        # initialising min speed label
+        # initialise min speed label
 
         self.min_speed_label = ttk.Label(self.min_speed_frame, text = "Min Speed")
         self.min_speed_label.pack(side = "left")
 
-        # initialising min speed combobox
+        # initialise min speed combobox
 
         self.min_speed_combobox = ttk.Combobox(self.min_speed_frame, values = (0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10), width = 5, state = "readonly")
         self.min_speed_combobox.pack(side = "left")
         self.min_speed_combobox.current(0)
 
-        # initialising max speed frame
+        # initialise max speed frame
 
         self.max_speed_frame = ttk.Frame(self.settings_frame)
         self.max_speed_frame.pack(side = "left", padx = 5)
 
-        # initialising max speed label
+        # initialise max speed label
 
         self.max_speed_label = ttk.Label(self.max_speed_frame, text = "Max Speed")
         self.max_speed_label.pack(side = "left")
 
-        # initialising max speed combobox
+        # initialise max speed combobox
 
         self.max_speed_combobox = ttk.Combobox(self.max_speed_frame, values = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0), width = 5, state = "readonly")
         self.max_speed_combobox.pack(side = "left")
         self.max_speed_combobox.current(0)
 
-        # initialising puzzle data frame
+        # initialise puzzle data frame
 
         self.puzzle_data_frame = ttk.Frame(self.puzzle_frame)
         self.puzzle_data_frame.pack(side = "right", padx = 15, pady = 15)
 
-        # initialising info label
+        # initialise info label
 
         self.info_label = ttk.Label(self.puzzle_data_frame, text = "Puzzle Information")
         self.info_label.pack()
 
-        # initialising info frame
+        # initialise info frame
 
         self.info_frame = ttk.Frame(self.puzzle_data_frame)
-        self.info_frame.pack()
+        self.info_frame.pack(pady = 5)
 
-        # initialising progress bar label
+        # initialise progressbar label
 
-        self.progress_label = ttk.Label(self.puzzle_data_frame, text = "Maze Progress")
-        self.progress_label.pack()
+        self.progressbar_label = ttk.Label(self.puzzle_data_frame, text = "Puzzle Progress")
+        self.progressbar_label.pack()
 
-        # intialising progress bar frame 
-        
-        self.progress_frame = ttk.Frame(self.puzzle_data_frame)
-        self.progress_frame.pack()
+        # initialise progressbar
 
-        # initialising options label
+        self.progressbar = ttk.Progressbar(self.puzzle_data_frame, length = 250)
+        self.progressbar.pack(pady = 5)
+
+        # initialise options label
 
         self.options_label = ttk.Label(self.puzzle_data_frame, text = "Puzzle Options")
         self.options_label.pack()
 
-        # initialising options frame
+        # initialise options frame
 
         self.options_frame = ttk.Frame(self.puzzle_data_frame)
-        self.options_frame.pack()
+        self.options_frame.pack(pady = 5)
 
-        # initialising main menu widgets
+        # initialise main menu widgets
 
         self.main_menu_title = ttk.Label(self.main_menu_frame, text = "Ball Maze Solver", font = ("Verdana", 24))
         self.main_menu_title.pack(pady=25)
@@ -150,12 +150,11 @@ class Interface:
         self.medium_difficulty_button = ttk.Button(self.main_menu_frame, text = "Hard", width = 80, command = self.load_hard_difficulty) # select hard difficulty
         self.medium_difficulty_button.pack(ipady = 25)
 
-        # initialising info widgets
+        # initialise general treeview
 
         self.general_treeview = ttk.Treeview(self.info_frame, columns = ("column1", "column2"), show = "headings", selectmode = "none") # contains general info about the puzzle
         self.general_treeview.column("column1", width = 140)
         self.general_treeview.column("column2", width = 100)
-
         self.difficulty_row = self.general_treeview.insert("", "end", values = ("Difficulty:", ""))
         self.x_position_row = self.general_treeview.insert("", "end", values = ("X Position:", ""))
         self.y_position_row = self.general_treeview.insert("", "end", values = ("Y Position:", ""))
@@ -163,28 +162,20 @@ class Interface:
         self.y_velocity_row = self.general_treeview.insert("", "end", values = ("Y Velocity:", ""))
         self.time_row = self.general_treeview.insert("", "end", values = ("Solve Time:", ""))
         self.progress_row = self.general_treeview.insert("", "end", values = ("Progress:", ""))
-
-
-        # initialising progress widget 
-
-        self.progress_bar_widget = ttk.Progressbar(self.progress_frame, orient = HORIZONTAL, length = 100, mode = 'determinate')
-        self.progress_bar_widget.pack(pady = 10)
-
-        # initialising state widget
-
         self.general_treeview.bind("<Button-1>", self.disable_treeview)
         self.general_treeview.pack()
 
-    
-        self.state_treeview = ttk.Treeview(self.info_frame, columns = ("state", "timestamp"), show = "headings", selectmode = "none") # contains state history of the motors
-        self.state_treeview.heading("state", text = "State")
-        self.state_treeview.heading("timestamp", text = "Timestamp")
-        self.state_treeview.column("state", width = 120)
-        self.state_treeview.column("timestamp", width = 120)
-        self.state_treeview.bind("<Button-1>", self.disable_treeview)
-        self.state_treeview.pack(pady = 15)
+        # initialise motor state treeview
 
-        # initialising options widgets
+        self.motor_state_treeview = ttk.Treeview(self.info_frame, columns = ("state", "timestamp"), show = "headings", selectmode = "none") # contains state history of the motors
+        self.motor_state_treeview.heading("state", text = "State")
+        self.motor_state_treeview.heading("timestamp", text = "Timestamp")
+        self.motor_state_treeview.column("state", width = 120)
+        self.motor_state_treeview.column("timestamp", width = 120)
+        self.motor_state_treeview.bind("<Button-1>", self.disable_treeview)
+        self.motor_state_treeview.pack(pady = 5)
+
+        # initialise options buttons
 
         self.start_button = ttk.Button(self.options_frame, text = "Start", width = 12, command = lambda: self.start(simulated = False)) # start the real puzzle solve
         self.start_button.pack(side = "left")
@@ -195,18 +186,18 @@ class Interface:
         self.stop_button = ttk.Button(self.options_frame, text = "Leave", width = 12, command = self.leave_to_main_menu) # stop the puzzle and go back to main menu
         self.stop_button.pack(side = "left")
 
-        # initialising timer values
+        # initialise timer values
 
         self.start_time = None
         self.timer_running = False
 
-        # starting on main menu by default
+        # start on main menu by default
 
         self.load_main_menu()
     
     def animate_model(self, model, simulated):
         
-        # initialising algorithm
+        # initialise algorithm
 
         def init():
 
@@ -242,18 +233,19 @@ class Interface:
             
             self.algorithm.run()
             
-            # table values are updated
-            progress_percentages = round(get_path_length_percentages(model.nodes)[self.algorithm.ball.progress - 1], 2)
+            # update table values
+
             self.general_treeview.set(self.x_position_row, "column2", round(self.algorithm.ball.position[0], 2))
             self.general_treeview.set(self.y_position_row, "column2", round(self.algorithm.ball.position[1], 2))
             self.general_treeview.set(self.x_velocity_row, "column2", round(self.algorithm.ball.velocity[0], 2))
             self.general_treeview.set(self.y_velocity_row, "column2", round(self.algorithm.ball.velocity[1], 2))
-            self.general_treeview.set(self.progress_row, "column2", f"{progress_percentages}%")
 
-            self.progress_bar_widget['value'] = progress_percentages
-            self.progress_frame.update_idletasks()
-            time.sleep(0.1)
-    
+            # fix for full progressbar on start
+
+            if self.algorithm.ball.progress > 0:
+                progress_percentages = round(get_path_length_percentages(model.nodes)[self.algorithm.ball.progress - 1], 2)
+                self.general_treeview.set(self.progress_row, "column2", f"{progress_percentages}%")
+                self.progressbar['value'] = progress_percentages
 
             if frame_number == 0:
                 self.previous_motor_state = ""
@@ -275,11 +267,7 @@ class Interface:
 
             return model.update_ball(self.puzzle_display_axes)
 
-
-
         self.animation = FuncAnimation(self.puzzle_display_figure, update, init_func = init, blit = True, interval = 33) # 30fps
-
-
 
     def reset_animation(self):
         try:
@@ -296,18 +284,17 @@ class Interface:
         self.general_treeview.set(self.progress_row, "column2", "")
         self.general_treeview.set(self.time_row, "column2", "00:00:0")
 
-        # reset state treeview
+        # reset motor state treeview
 
-        self.state_treeview.delete(*self.state_treeview.get_children())
+        self.motor_state_treeview.delete(*self.motor_state_treeview.get_children())
 
-        # reset progress bar
-        self.progress_bar_widget['value'] = 0
-        self.progress_frame.update_idletasks()
-        time.sleep(0.1)
+        # reset progressbar
+        
+        self.progressbar['value'] = 0
     
     def stop_puzzle(self):
 
-        # stop timer when returning back to the main menu
+        # stop timer
 
         self.stop_timer()
 
@@ -371,7 +358,7 @@ class Interface:
         self.load_puzzle_menu("HARD")
 
     def disable_treeview(self, event):
-        if self.general_treeview.identify_region(event.x, event.y) == "separator" or self.state_treeview.identify_region(event.x, event.y) == "separator":
+        if self.general_treeview.identify_region(event.x, event.y) == "separator" or self.motor_state_treeview.identify_region(event.x, event.y) == "separator":
             return "break"
     
     def start_puzzle(self, nodes, holes, simulated):
@@ -421,13 +408,13 @@ class Interface:
         seconds = int(elap - hours * 3600.0 - minutes * 60.0)
         hseconds = int((elap - hours * 3600.0 - minutes * 60.0 - seconds) * 10)
 
-        # display stop watch
+        # display stopwatch
 
         self.constant_time = "%02d:%02d:%01d" % (minutes, seconds, hseconds)
         self.general_treeview.set(self.time_row, "column2", self.constant_time)
 
     def insert_motor_state(self, state, time):
-        self.state_treeview.insert("", 0, values = (state, time))
+        self.motor_state_treeview.insert("", 0, values = (state, time))
     
 
 
