@@ -1,7 +1,7 @@
 import time
 
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import HORIZONTAL, ttk, messagebox
 
 from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
@@ -19,7 +19,7 @@ class Interface:
         # initialising window parameters
 
         self.master.title("Ball Maze Solver")
-        self.master.geometry("1000x600")
+        self.master.geometry("1000x650")
         self.master.resizable(False, False)
 
         # initialising page frames
@@ -55,7 +55,7 @@ class Interface:
         self.node_tolerance_frame = ttk.Frame(self.settings_frame)
         self.node_tolerance_frame.pack(side = "left", padx = 5)
 
-        # initialising node telerance label
+        # initialising node tolerance label
 
         self.node_tolerance_label = ttk.Label(self.node_tolerance_frame, text = "Node Tolerance")
         self.node_tolerance_label.pack(side = "left")
@@ -113,6 +113,16 @@ class Interface:
         self.info_frame = ttk.Frame(self.puzzle_data_frame)
         self.info_frame.pack()
 
+        # initialising progress bar label
+
+        self.progress_label = ttk.Label(self.puzzle_data_frame, text = "Maze Progress")
+        self.progress_label.pack()
+
+        # intialising progress bar frame 
+        
+        self.progress_frame = ttk.Frame(self.puzzle_data_frame)
+        self.progress_frame.pack()
+
         # initialising options label
 
         self.options_label = ttk.Label(self.puzzle_data_frame, text = "Puzzle Options")
@@ -155,9 +165,17 @@ class Interface:
         self.progress_row = self.general_treeview.insert("", "end", values = ("Progress:", ""))
 
 
+        # initialising progress widget 
+
+        self.progress_bar_widget = ttk.Progressbar(self.progress_frame, orient = HORIZONTAL, length = 100, mode = 'determinate')
+        self.progress_bar_widget.pack(pady = 10)
+
+        # initialising state widget
+
         self.general_treeview.bind("<Button-1>", self.disable_treeview)
         self.general_treeview.pack()
 
+    
         self.state_treeview = ttk.Treeview(self.info_frame, columns = ("state", "timestamp"), show = "headings", selectmode = "none") # contains state history of the motors
         self.state_treeview.heading("state", text = "State")
         self.state_treeview.heading("timestamp", text = "Timestamp")
@@ -225,12 +243,17 @@ class Interface:
             self.algorithm.run()
             
             # table values are updated
-
+            progress_percentages = round(get_path_length_percentages(model.nodes)[self.algorithm.ball.progress - 1], 2)
             self.general_treeview.set(self.x_position_row, "column2", round(self.algorithm.ball.position[0], 2))
             self.general_treeview.set(self.y_position_row, "column2", round(self.algorithm.ball.position[1], 2))
             self.general_treeview.set(self.x_velocity_row, "column2", round(self.algorithm.ball.velocity[0], 2))
             self.general_treeview.set(self.y_velocity_row, "column2", round(self.algorithm.ball.velocity[1], 2))
-            self.general_treeview.set(self.progress_row, "column2", f"{round(get_path_length_percentages(model.nodes)[self.algorithm.ball.progress - 1], 2)}%")
+            self.general_treeview.set(self.progress_row, "column2", f"{progress_percentages}%")
+
+            self.progress_bar_widget['value'] = progress_percentages
+            self.progress_frame.update_idletasks()
+            time.sleep(0.1)
+    
 
             if frame_number == 0:
                 self.previous_motor_state = ""
@@ -252,7 +275,11 @@ class Interface:
 
             return model.update_ball(self.puzzle_display_axes)
 
+
+
         self.animation = FuncAnimation(self.puzzle_display_figure, update, init_func = init, blit = True, interval = 33) # 30fps
+
+
 
     def reset_animation(self):
         try:
@@ -272,6 +299,11 @@ class Interface:
         # reset state treeview
 
         self.state_treeview.delete(*self.state_treeview.get_children())
+
+        # reset progress bar
+        self.progress_bar_widget['value'] = 0
+        self.progress_frame.update_idletasks()
+        time.sleep(0.1)
     
     def stop_puzzle(self):
 
@@ -396,3 +428,9 @@ class Interface:
 
     def insert_motor_state(self, state, time):
         self.state_treeview.insert("", 0, values = (state, time))
+    
+
+
+
+
+
