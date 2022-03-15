@@ -62,9 +62,9 @@ class Interface:
 
         # initialise node tolerance combobox
 
-        self.node_tolerance_combobox = ttk.Combobox(self.node_tolerance_frame, values = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0), width = 5, state = "readonly")
+        self.node_tolerance_combobox = ttk.Combobox(self.node_tolerance_frame, values = (0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0), width = 5, state = "readonly")
         self.node_tolerance_combobox.pack(side = "left")
-        self.node_tolerance_combobox.current(9)
+        self.node_tolerance_combobox.current(7)
 
         # initialise min speed frame
 
@@ -78,7 +78,7 @@ class Interface:
 
         # initialise min speed combobox
 
-        self.min_speed_combobox = ttk.Combobox(self.min_speed_frame, values = (0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10), width = 5, state = "readonly")
+        self.min_speed_combobox = ttk.Combobox(self.min_speed_frame, values = (0.010, 0.011, 0.012, 0.013, 0.014, 0.015, 0.016, 0.017, 0.018, 0.019), width = 5, state = "readonly")
         self.min_speed_combobox.pack(side = "left")
         self.min_speed_combobox.current(0)
 
@@ -94,7 +94,7 @@ class Interface:
 
         # initialise max speed combobox
 
-        self.max_speed_combobox = ttk.Combobox(self.max_speed_frame, values = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0), width = 5, state = "readonly")
+        self.max_speed_combobox = ttk.Combobox(self.max_speed_frame, values = (0.10, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19), width = 5, state = "readonly")
         self.max_speed_combobox.pack(side = "left")
         self.max_speed_combobox.current(0)
 
