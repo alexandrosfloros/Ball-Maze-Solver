@@ -153,8 +153,8 @@ class Interface:
         # initialise general treeview
 
         self.general_treeview = ttk.Treeview(self.info_frame, columns = ("column1", "column2"), show = "headings", selectmode = "none") # contains general info about the puzzle
-        self.general_treeview.column("column1", width = 140)
-        self.general_treeview.column("column2", width = 100)
+        self.general_treeview.column("column1", width = 120)
+        self.general_treeview.column("column2", width = 120)
         self.difficulty_row = self.general_treeview.insert("", "end", values = ("Difficulty:", ""))
         self.x_position_row = self.general_treeview.insert("", "end", values = ("X Position:", ""))
         self.y_position_row = self.general_treeview.insert("", "end", values = ("Y Position:", ""))
