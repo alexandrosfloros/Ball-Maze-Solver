@@ -9,15 +9,15 @@ Motor outputs:
 
 Motor in the y axis (moves the ball in x):
 
-Method                      | Motor angle (absolute)
-self.ball.motor_zero_x()    | 0
+Method                       | Motor angle (absolute)
+self.ball.motor_zero_x()     | 0
 self.ball.motor_pos_x()      | +theta
 self.ball.motor_neg_x()      | -theta
 
 Motor in the x axis (moves the ball in y):
 
-Method                      | Motor angle (absolute)
-self.ball.motor_zero_y()    | 0
+Method                       | Motor angle (absolute)
+self.ball.motor_zero_y()     | 0
 self.ball.motor_pos_y()      | +theta
 self.ball.motor_neg_y()      | -theta
 
@@ -25,11 +25,11 @@ where theta is a very small angle (small acceleration)
 
 User interface outputs:
 
-Attribute                   | Information
-self.ball.position          | Ball position
-self.ball.velocity          | Ball velocity
-self.ball.next_node         | Ball destination
-self.motor_state            | Motor position
+Attribute                    | Information
+self.ball.position           | Ball position
+self.ball.velocity           | Ball velocity
+self.ball.next_node          | Ball destination
+self.motor_state             | Motor position
 """
 
 import math
@@ -50,31 +50,55 @@ class Ball:
     
     def motor_zero_x(self):
         self.motor_state = "ZERO_X"
-        self.acceleration[0] = 0.0 # acceleration is set manually, only used for simulation
+        
+        if self.simulated:
+            self.acceleration[0] = 0.0 # acceleration is set manually, only used for simulation
+        else:
+            print("MOTOR ZERO_X") # the real motor is triggered here
 
     def motor_zero_y(self):
         self.motor_state = "ZERO_Y"
-        self.acceleration[1] = 0.0 # acceleration is set manually, only used for simulation
+
+        if self.simulated:
+            self.acceleration[1] = 0.0 # acceleration is set manually, only used for simulation
+        else:
+            print("MOTOR ZERO_Y") # the real motor is triggered here
 
     # the ball moves in the x axis
 
     def motor_pos_x(self):
         self.motor_state = "POS_X"
-        self.acceleration[0] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
+
+        if self.simulated:
+            self.acceleration[0] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
+        else:
+            print("MOTOR POS_X") # the real motor is triggered here
 
     def motor_neg_x(self):
         self.motor_state = "NEG_X"
-        self.acceleration[0] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
+
+        if self.simulated:
+            self.acceleration[0] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
+        else:
+            print("MOTOR NEG_X") # the real motor is triggered here
     
     # the ball moves in the y axis
 
     def motor_pos_y(self):
         self.motor_state = "POS_Y"
-        self.acceleration[1] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
+
+        if self.simulated:
+            self.acceleration[1] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
+        else:
+            print("MOTOR POS_Y") # the real motor is triggered here
 
     def motor_neg_y(self):
         self.motor_state = "NEG_Y"
-        self.acceleration[1] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
+
+        if self.simulated:
+            self.acceleration[1] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
+        else:
+            print("MOTOR NEG_Y") # the real motor is triggered here
 
     # the ball is balanced as it moves in the x axis
 
@@ -118,10 +142,12 @@ class Ball:
         self.progress += 1
 
 class BallMazeAlgorithm:
-    def __init__(self, ball, nodes, holes):
-        self.ball = ball
-        self.nodes = nodes
-        self.holes = holes
+    def __init__(self, model, simulated):
+        self.ball = model.ball
+        self.nodes = model.nodes
+        self.holes = model.holes
+        self.ball.simulated = simulated
+
         self.limit = len(self.nodes)
         self.node_tolerance = 1.0 # units
         self.game_won = False

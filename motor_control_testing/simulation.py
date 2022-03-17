@@ -15,7 +15,7 @@ def animate_model(model):
 
     def init():
         global algorithm
-        algorithm = BallMazeAlgorithm(model.ball, model.nodes, model.holes)
+        algorithm = BallMazeAlgorithm(model)
 
         return model.init_path(ax)
 
