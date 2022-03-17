@@ -32,17 +32,9 @@ class Interface:
         self.puzzle_display_frame = ttk.Frame(self.puzzle_frame)
         self.puzzle_display_frame.pack(side = "left")
 
-        # initialise puzzle display canvas
-
-        self.puzzle_display_figure = plt.figure()
-        self.puzzle_display_axes = self.puzzle_display_figure.add_axes([0, 0, 1, 1])
-
-        self.puzzle_display_canvas = FigureCanvasTkAgg(self.puzzle_display_figure, master = self.puzzle_display_frame)
-        self.puzzle_display_canvas.get_tk_widget().pack()
-
         # initialise settings label
 
-        self.settings_label = ttk.Label(self.puzzle_display_frame, text = "Algorithm Settings")
+        self.settings_label = ttk.Label(self.puzzle_display_frame, text = "Algorithm Settings (on start)")
         self.settings_label.pack(fill = tk.X, pady = 5)
 
         # initialise settings frame
@@ -279,6 +271,21 @@ class Interface:
             pass
     
     def reset_puzzle(self):
+
+        # reset puzzle display figure
+
+        try:
+            self.puzzle_display_canvas.get_tk_widget().destroy()
+        except:
+            pass
+
+        self.puzzle_display_figure = plt.figure()
+        self.puzzle_display_axes = self.puzzle_display_figure.add_axes([0, 0, 1, 1])
+
+        self.puzzle_display_canvas = FigureCanvasTkAgg(self.puzzle_display_figure, master = self.puzzle_display_frame)
+        self.puzzle_display_canvas.get_tk_widget().pack(before = self.settings_label)
+
+        # reset general treeview
 
         self.general_treeview.set(self.x_position_row, "column2", "")
         self.general_treeview.set(self.y_position_row, "column2", "")
