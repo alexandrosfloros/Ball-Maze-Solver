@@ -82,10 +82,11 @@ class Ball:
         self.progress += 1
 
 class BallMazeAlgorithm:
-    def __init__(self, ball, nodes, holes):
-        self.ball = ball
-        self.nodes = nodes
-        self.holes = holes
+    def __init__(self, model):
+        self.ball = model.ball
+        self.nodes = model.nodes
+        self.holes = model.holes
+        
         self.limit = len(self.nodes)
         self.node_tolerance = 1.0 # units
         self.game_won = False

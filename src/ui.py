@@ -201,7 +201,7 @@ class Interface:
 
         def init():
 
-            self.algorithm = BallMazeAlgorithm(model.ball, model.nodes, model.holes)
+            self.algorithm = BallMazeAlgorithm(model, simulated)
             self.algorithm.node_tolerance = float(self.node_tolerance_combobox.get())
             self.algorithm.ball.max_speed = float(self.max_speed_combobox.get())
             self.algorithm.ball.min_speed = float(self.min_speed_combobox.get())
@@ -222,11 +222,14 @@ class Interface:
 
                 """
                 This is the loop for the real puzzle solve
-                The position of the ball is received by the image processing, one frame at a time
-                It is then assigned to the ball using:
+                The position and velocity of the ball are received by the image processing, one frame at a time
+                They are then assigned to the ball using:
                 
                 self.algorithm.ball.position[0] = ...
                 self.algorithm.ball.position[1] = ...
+
+                self.algorithm.ball.velocity[0] = ...
+                self.algorithm.ball.velocity[1] = ...
 
                 Then, the algorithm is run for that frame
                 """
@@ -415,9 +418,3 @@ class Interface:
 
     def insert_motor_state(self, state, time):
         self.motor_state_treeview.insert("", 0, values = (state, time))
-    
-
-
-
-
-
