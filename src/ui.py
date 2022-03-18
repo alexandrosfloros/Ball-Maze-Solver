@@ -32,17 +32,9 @@ class Interface:
         self.puzzle_display_frame = ttk.Frame(self.puzzle_frame)
         self.puzzle_display_frame.pack(side = "left")
 
-        # initialise puzzle display canvas
-
-        self.puzzle_display_figure = plt.figure()
-        self.puzzle_display_axes = self.puzzle_display_figure.add_axes([0, 0, 1, 1])
-
-        self.puzzle_display_canvas = FigureCanvasTkAgg(self.puzzle_display_figure, master = self.puzzle_display_frame)
-        self.puzzle_display_canvas.get_tk_widget().pack()
-
         # initialise settings label
 
-        self.settings_label = ttk.Label(self.puzzle_display_frame, text = "Algorithm Settings")
+        self.settings_label = ttk.Label(self.puzzle_display_frame, text = "Algorithm Settings (on start)")
         self.settings_label.pack(fill = tk.X, pady = 5)
 
         # initialise settings frame
@@ -62,9 +54,9 @@ class Interface:
 
         # initialise node tolerance combobox
 
-        self.node_tolerance_combobox = ttk.Combobox(self.node_tolerance_frame, values = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0), width = 5, state = "readonly")
+        self.node_tolerance_combobox = ttk.Combobox(self.node_tolerance_frame, values = (0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0), width = 5, state = "readonly")
         self.node_tolerance_combobox.pack(side = "left")
-        self.node_tolerance_combobox.current(9)
+        self.node_tolerance_combobox.current(7)
 
         # initialise min speed frame
 
@@ -78,7 +70,7 @@ class Interface:
 
         # initialise min speed combobox
 
-        self.min_speed_combobox = ttk.Combobox(self.min_speed_frame, values = (0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10), width = 5, state = "readonly")
+        self.min_speed_combobox = ttk.Combobox(self.min_speed_frame, values = (0.010, 0.011, 0.012, 0.013, 0.014, 0.015, 0.016, 0.017, 0.018, 0.019), width = 5, state = "readonly")
         self.min_speed_combobox.pack(side = "left")
         self.min_speed_combobox.current(0)
 
@@ -94,7 +86,7 @@ class Interface:
 
         # initialise max speed combobox
 
-        self.max_speed_combobox = ttk.Combobox(self.max_speed_frame, values = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0), width = 5, state = "readonly")
+        self.max_speed_combobox = ttk.Combobox(self.max_speed_frame, values = (0.10, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19), width = 5, state = "readonly")
         self.max_speed_combobox.pack(side = "left")
         self.max_speed_combobox.current(0)
 
@@ -153,8 +145,8 @@ class Interface:
         # initialise general treeview
 
         self.general_treeview = ttk.Treeview(self.info_frame, columns = ("column1", "column2"), show = "headings", selectmode = "none") # contains general info about the puzzle
-        self.general_treeview.column("column1", width = 140)
-        self.general_treeview.column("column2", width = 100)
+        self.general_treeview.column("column1", width = 120)
+        self.general_treeview.column("column2", width = 120)
         self.difficulty_row = self.general_treeview.insert("", "end", values = ("Difficulty:", ""))
         self.x_position_row = self.general_treeview.insert("", "end", values = ("X Position:", ""))
         self.y_position_row = self.general_treeview.insert("", "end", values = ("Y Position:", ""))
@@ -201,7 +193,7 @@ class Interface:
 
         def init():
 
-            self.algorithm = BallMazeAlgorithm(model.ball, model.nodes, model.holes)
+            self.algorithm = BallMazeAlgorithm(model, simulated)
             self.algorithm.node_tolerance = float(self.node_tolerance_combobox.get())
             self.algorithm.ball.max_speed = float(self.max_speed_combobox.get())
             self.algorithm.ball.min_speed = float(self.min_speed_combobox.get())
@@ -222,11 +214,14 @@ class Interface:
 
                 """
                 This is the loop for the real puzzle solve
-                The position of the ball is received by the image processing, one frame at a time
-                It is then assigned to the ball using:
+                The position and velocity of the ball are received by the image processing, one frame at a time
+                They are then assigned to the ball using:
                 
                 self.algorithm.ball.position[0] = ...
                 self.algorithm.ball.position[1] = ...
+
+                self.algorithm.ball.velocity[0] = ...
+                self.algorithm.ball.velocity[1] = ...
 
                 Then, the algorithm is run for that frame
                 """
@@ -276,6 +271,21 @@ class Interface:
             pass
     
     def reset_puzzle(self):
+
+        # reset puzzle display figure
+
+        try:
+            self.puzzle_display_canvas.get_tk_widget().destroy()
+        except:
+            pass
+
+        self.puzzle_display_figure = plt.figure()
+        self.puzzle_display_axes = self.puzzle_display_figure.add_axes([0, 0, 1, 1])
+
+        self.puzzle_display_canvas = FigureCanvasTkAgg(self.puzzle_display_figure, master = self.puzzle_display_frame)
+        self.puzzle_display_canvas.get_tk_widget().pack(before = self.settings_label)
+
+        # reset general treeview
 
         self.general_treeview.set(self.x_position_row, "column2", "")
         self.general_treeview.set(self.y_position_row, "column2", "")
@@ -415,9 +425,3 @@ class Interface:
 
     def insert_motor_state(self, state, time):
         self.motor_state_treeview.insert("", 0, values = (state, time))
-    
-
-
-
-
-

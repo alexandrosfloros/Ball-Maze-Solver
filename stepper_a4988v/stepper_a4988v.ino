@@ -1,4 +1,4 @@
-// Include the AccelStepper library:
+ // Include the AccelStepper library:
 #include <AccelStepper.h>
 
 // Define stepper motor connections and steps per revolution:
@@ -6,6 +6,7 @@
 #define stepPin_1 3
 #define dirPin_2 5
 #define stepPin_2 6
+#define led 4
 #define motorInterfaceType 1
 int angle;
 String inByte;
@@ -19,39 +20,39 @@ void setup() {
   stepper_1.setMaxSpeed(500);
   stepper_2.setMaxSpeed(500);
 
-  Serial.begin(9600);
-  
+  Serial.begin(115200);
+  // Set the current position to 0:
+  stepper_1.setCurrentPosition(0);
+  stepper_2.setCurrentPosition(0);
 }
 
 void loop() {
 
-// Set the current position to 0:
-  stepper_1.setCurrentPosition(0);
-  stepper_2.setCurrentPosition(0);
+
 
 if(Serial.available()) { 
-    inByte = Serial.readStringUntil('\n'); //receive the signals from python files
-    angle = inByte.toInt();//convert strings into integer
-
-    switch (angle){
-    case 1 :
+    //inByte = Serial.readStringUntil('\n'); //receive the signals from python files
+    char command = Serial.read();
+    
+    switch (command){
+    case 'a' :
       // clockwise rotate 36 degrees
       while(stepper_1.currentPosition() != 20)
       {
-      stepper_1.setSpeed(50);
+      stepper_1.setSpeed(70);
       stepper_1.runSpeed();
       }
       Serial.println(36);
       Serial.println(stepper_1.currentPosition());
       break;
 
-    case 2 :
+    case 'b' :
       // return to 0 degree
       // detect the motor current position
       if (stepper_1.currentPosition() == 20){
         while(stepper_1.currentPosition() != 0)
         {
-        stepper_1.setSpeed(-50);
+        stepper_1.setSpeed(-70);
         stepper_1.runSpeed();
         }
         Serial.println(0);
@@ -60,7 +61,7 @@ if(Serial.available()) {
       else if (stepper_1.currentPosition() == -20){
         while(stepper_1.currentPosition() != 0)
         {
-        stepper_1.setSpeed(50);
+        stepper_1.setSpeed(70);
         stepper_1.runSpeed();
         
         }
@@ -70,11 +71,11 @@ if(Serial.available()) {
       else {}
       break;
 
-    case 3 :
+    case 'c' :
       // anti-clockwise rotate 36 degrees
       while(stepper_1.currentPosition() != -20)
       {
-      stepper_1.setSpeed(-50);
+      stepper_1.setSpeed(-70);
       stepper_1.runSpeed();
       
       }
@@ -82,11 +83,11 @@ if(Serial.available()) {
       Serial.println(stepper_1.currentPosition());
       break;
 
-    case -1 :
+    case 'd' :
       // clockwise rotate 36 degrees
       while(stepper_2.currentPosition() != 20)
       {
-      stepper_2.setSpeed(50);
+      stepper_2.setSpeed(70);
       stepper_2.runSpeed();
       
       }
@@ -94,13 +95,13 @@ if(Serial.available()) {
       Serial.println(stepper_2.currentPosition());
       break;
 
-    case -2 :
+    case 'e' :
       // return to 0 degree
       // detect the motor current position
       if (stepper_2.currentPosition() == 20){
         while(stepper_2.currentPosition() != 0)
         {
-        stepper_2.setSpeed(-50);
+        stepper_2.setSpeed(-70);
         stepper_2.runSpeed();
         
         }
@@ -110,7 +111,7 @@ if(Serial.available()) {
       else if (stepper_2.currentPosition() == -20){
         while(stepper_2.currentPosition() != 0)
         {
-        stepper_2.setSpeed(50);
+        stepper_2.setSpeed(70);
         stepper_2.runSpeed();
         
         }
@@ -120,21 +121,25 @@ if(Serial.available()) {
       else {}
       break;
 
-    case -3 :
+    case 'f' :
       // anti-clockwise rotate 36 degrees
       while(stepper_2.currentPosition() != -20)
       {
-      stepper_2.setSpeed(-50);
+      stepper_2.setSpeed(-70);
       stepper_2.runSpeed();
       
       }
       Serial.println(-36);
       Serial.println(stepper_2.currentPosition());
       break;
-   
+    case 'g' :
+    digitalWrite(led, true);
+    delay(100);
+    digitalWrite(led, false);
+    break;
     Serial.flush();
     // already tried several values for the delay function
-    delay(15);
+    delay(5);
     }
 }
 }
