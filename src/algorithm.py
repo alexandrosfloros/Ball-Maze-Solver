@@ -34,6 +34,12 @@ self.motor_state             | Motor position
 
 import math
 
+# used for real motor implementation
+import serial
+from time import sleep
+arduino = serial.Serial('COM3', 115200, timeout=0.5)
+sleep(1)
+
 class Ball:
     def __init__(self, position):
         self.position = position
@@ -54,7 +60,8 @@ class Ball:
         if self.simulated:
             self.acceleration[0] = 0.0 # acceleration is set manually, only used for simulation
         else:
-            print("MOTOR ZERO_X") # the real motor is triggered here
+            arduino.write(b'b') # the real motor is triggered here
+            print('x motor return to 0 degree')
 
     def motor_zero_y(self):
         self.motor_state = "ZERO_Y"
@@ -62,8 +69,8 @@ class Ball:
         if self.simulated:
             self.acceleration[1] = 0.0 # acceleration is set manually, only used for simulation
         else:
-            print("MOTOR ZERO_Y") # the real motor is triggered here
-
+            arduino.write(b'e') # the real motor is triggered here
+            print('y motor return to 0 degree')
     # the ball moves in the x axis
 
     def motor_pos_x(self):
@@ -72,7 +79,8 @@ class Ball:
         if self.simulated:
             self.acceleration[0] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
         else:
-            print("MOTOR POS_X") # the real motor is triggered here
+            arduino.write(b'c')
+            print('x motor clockwise rotate 36 degrees') # the real motor is triggered here
 
     def motor_neg_x(self):
         self.motor_state = "NEG_X"
@@ -80,7 +88,8 @@ class Ball:
         if self.simulated:
             self.acceleration[0] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
         else:
-            print("MOTOR NEG_X") # the real motor is triggered here
+            arduino.write(b'a')
+            print('x motor anti-clockwise rotate 36 degrees') # the real motor is triggered here
     
     # the ball moves in the y axis
 
@@ -90,7 +99,8 @@ class Ball:
         if self.simulated:
             self.acceleration[1] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
         else:
-            print("MOTOR POS_Y") # the real motor is triggered here
+            arduino.write(b'f')
+            print('y motor clockwise rotate 36 degrees')# the real motor is triggered here
 
     def motor_neg_y(self):
         self.motor_state = "NEG_Y"
@@ -98,7 +108,8 @@ class Ball:
         if self.simulated:
             self.acceleration[1] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
         else:
-            print("MOTOR NEG_Y") # the real motor is triggered here
+            arduino.write(b'd')
+            print('y motor anti-clockwise rotate 36 degrees') # the real motor is triggered here
 
     # the ball is balanced as it moves in the x axis
 

@@ -18,27 +18,27 @@ while 1:
 
     if(var == 'a'):
         arduino.write(b'a')
-        print('motor1 clockwise rotate 36 degrees')
+        print('motor1 anti-clockwise rotate 36 degrees')
         #sleep(0.1)
     elif(var == 'b'):
         arduino.write(b'b')
-        print('motor1 return to 0 degree')
+        print('x motor return to 0 degree')
         #sleep(0.1)
     elif(var == 'c'):
         arduino.write(b'c')
-        print('motor1 anti-clockwise rotate 36 degrees')
+        print('motor1 clockwise rotate 36 degrees')
         #sleep(0.1)
     elif(var == 'd'):
         arduino.write(b'd')
-        print('motor2 clockwise rotate 36 degrees')
+        print('motor2 anti-clockwise rotate 36 degrees')
         #sleep(0.1)
     elif(var == 'e'):
         arduino.write(b'e')
-        print('motor2 return to 0 degree')
+        print('y motor return to 0 degree')
         #sleep(0.1)
     elif(var == 'f'):
         arduino.write(b'f')
-        print('motor2 anti-clockwise rotate 36 degrees')
+        print('motor2 clockwise rotate 36 degrees')
         #sleep(0.1)
     elif(var == 'g'):
         arduino.write(b'g')
