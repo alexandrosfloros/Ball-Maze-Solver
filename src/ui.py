@@ -11,6 +11,8 @@ from motor_control_testbench import *
 from motor_control_testing.graphics import *
 from src.algorithm import *
 from src.node_functions import *
+from itertools import count
+
 
 class Interface:
     def __init__(self, master):
@@ -225,6 +227,13 @@ class Interface:
 
                 Then, the algorithm is run for that frame
                 """
+            self.algorithm.ball.position[0] = self.algorithm.ball.cal_position()[0]
+            self.algorithm.ball.position[1] = self.algorithm.ball.cal_position()[1]
+            self.algorithm.ball.time = time.time()
+            self.algorithm.ball.velocity[0] = self.algorithm.ball.cal_speed()[0]
+            self.algorithm.ball.velocity[1] = self.algorithm.ball.cal_speed()[1]
+    
+        
             
             self.algorithm.run()
             

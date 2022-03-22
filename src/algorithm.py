@@ -31,8 +31,12 @@ self.ball.velocity           | Ball velocity
 self.ball.next_node          | Ball destination
 self.motor_state             | Motor position
 """
-
 import math
+from itertools import count
+from turtle import distance, position
+import cv2
+import numpy
+import time
 
 # used for real motor implementation
 import serial
@@ -51,6 +55,17 @@ class Ball:
 
         self.moving_x = True
         self.progress = 0
+        self.moving_data ={}
+
+        self.count = 0 
+        self.cam = cv2.VideoCapture(0)
+
+
+        self.s = numpy.ones((5 ,5), numpy.uint8)
+        self.rangomax = numpy.array([140,90,13])  # BGR color 
+        self.rangomin = numpy.array([20, 11, 0])  # BGR color 
+        self.T1 = time.time()   
+
     
     # the board is not tilting
     
@@ -61,7 +76,7 @@ class Ball:
             self.acceleration[0] = 0.0 # acceleration is set manually, only used for simulation
         else:
             arduino.write(b'b') # the real motor is triggered here
-            print('x motor return to 0 degree')
+            #print('x motor return to 0 degree')
 
     def motor_zero_y(self):
         self.motor_state = "ZERO_Y"
@@ -70,7 +85,7 @@ class Ball:
             self.acceleration[1] = 0.0 # acceleration is set manually, only used for simulation
         else:
             arduino.write(b'e') # the real motor is triggered here
-            print('y motor return to 0 degree')
+            #print('y motor return to 0 degree')
     # the ball moves in the x axis
 
     def motor_pos_x(self):
@@ -80,7 +95,7 @@ class Ball:
             self.acceleration[0] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
         else:
             arduino.write(b'c')
-            print('x motor clockwise rotate 36 degrees') # the real motor is triggered here
+            #print('x motor clockwise rotate 36 degrees') # the real motor is triggered here
 
     def motor_neg_x(self):
         self.motor_state = "NEG_X"
@@ -89,7 +104,7 @@ class Ball:
             self.acceleration[0] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
         else:
             arduino.write(b'a')
-            print('x motor anti-clockwise rotate 36 degrees') # the real motor is triggered here
+            #print('x motor anti-clockwise rotate 36 degrees') # the real motor is triggered here
     
     # the ball moves in the y axis
 
@@ -100,7 +115,7 @@ class Ball:
             self.acceleration[1] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
         else:
             arduino.write(b'f')
-            print('y motor clockwise rotate 36 degrees')# the real motor is triggered here
+            #print('y motor clockwise rotate 36 degrees')# the real motor is triggered here
 
     def motor_neg_y(self):
         self.motor_state = "NEG_Y"
@@ -109,7 +124,7 @@ class Ball:
             self.acceleration[1] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
         else:
             arduino.write(b'd')
-            print('y motor anti-clockwise rotate 36 degrees') # the real motor is triggered here
+            #print('y motor anti-clockwise rotate 36 degrees') # the real motor is triggered here
 
     # the ball is balanced as it moves in the x axis
 
@@ -151,6 +166,37 @@ class Ball:
     def stop_y(self):
         self.moving_x = True
         self.progress += 1
+
+    def cal_speed(self):
+            self.count+=1
+            ball_data = [self.position[0],self.position[1],self.time]
+            self.moving_data[self.count] = ball_data
+            if self.count >= 10: # calculate the speed 
+                x_Distance = abs(self.moving_data[self.count][0]-self.moving_data[self.count-9][0])
+                y_Distance = abs(self.moving_data[self.count][1]-self.moving_data[self.count-9][1])
+                self.velocity[0] = x_Distance / (self.moving_data[self.count][2]-self.moving_data[self.count-9][2])
+                self.velocity[1] = y_Distance / (self.moving_data[self.count][2]-self.moving_data[self.count-9][2])
+                del self.moving_data[self.count-9]
+            if self.velocity[0]<1:
+                self.velocity[0]=0
+            elif self.velocity[1]<1:
+                self.velocity[1]=0
+            elif  self.velocity[0] > 15 or self.velocity[1] >15:
+                self.velocity = [0,0]
+                
+
+            return self.velocity
+    def cal_position(self): 
+            ret, frame = self.cam.read()                                    # image read 
+            mask = cv2.inRange(frame, self.rangomin, self.rangomax)               # get blue pixel on the image 
+            blue = cv2.morphologyEx(mask, cv2.MORPH_OPEN, self.s)            # creat a image of blue-pixel only 
+            x, y, w, h = cv2.boundingRect(blue)                         # get blue pixel location 
+ 
+            position = [int((x+w/2-98)/18),int(23.5-(y+h/2-37)/18)]
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 3)
+            #cv2.imshow('camera', frame)    
+            return position
+
 
 class BallMazeAlgorithm:
     def __init__(self, model, simulated):
