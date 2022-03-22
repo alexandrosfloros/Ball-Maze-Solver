@@ -5,7 +5,7 @@ import numpy
 import time
 import math
 
-cam = cv2.VideoCapture(0)
+cam = cv2.VideoCapture(2)
 s = numpy.ones((5 ,5), numpy.uint8)
 rangomax = numpy.array([140,90,13])
 rangomin = numpy.array([20, 11, 0]) 
@@ -17,6 +17,8 @@ def mouse_detect(event, x, y, flags, param):
     global mouse_x, mouse_y
     if event == cv2.EVENT_LBUTTONDBLCLK:
         print('({}, {})'.format(x, y))
+
+
 
 
 while (True):
@@ -47,7 +49,7 @@ while (True):
         #print(moving_speed)
         if x_position >= 98 and y_position >= 37:
             x_position_cm = int((x_position-98)/18)
-            y_position_cm = int((y_position-37)/18)
+            y_position_cm = 23 - int((y_position-37)/18)
             print(x_position_cm,y_position_cm,moving_speed)
 
     cv2.imshow('camera', frame)
