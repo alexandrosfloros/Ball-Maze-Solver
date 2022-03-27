@@ -16,8 +16,8 @@ class BallMazeModel:
         return patches
 
     def init_path(self, ax):
-        ax.set_xlim([0, 28])
-        ax.set_ylim([0, 23])
+        ax.set_xlim([-2, 30])
+        ax.set_ylim([-2, 25])
 
         xn = [n[0] for n in self.nodes]
         yn = [n[1] for n in self.nodes]

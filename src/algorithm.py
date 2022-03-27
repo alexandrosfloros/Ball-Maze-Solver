@@ -280,5 +280,5 @@ class BallMazeAlgorithm:
 
         # the game is lost
 
-        if any(math.dist(self.ball.position, h) < 0.75 for h in self.holes):
+        if any(math.dist(self.ball.position, h) < 0.25 for h in self.holes):
             self.game_lost = True
