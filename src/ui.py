@@ -1,3 +1,4 @@
+import datetime
 import time
 
 import tkinter as tk
@@ -145,7 +146,6 @@ class Interface:
         self.medium_difficulty_button.pack(ipady = 25)
 
         # initialise general treeview
-
         self.general_treeview = ttk.Treeview(self.info_frame, columns = ("column1", "column2"), show = "headings", selectmode = "none") # contains general info about the puzzle
         self.general_treeview.column("column1", width = 120)
         self.general_treeview.column("column2", width = 120)
@@ -155,6 +155,7 @@ class Interface:
         self.x_velocity_row = self.general_treeview.insert("", "end", values = ("X Velocity:", ""))
         self.y_velocity_row = self.general_treeview.insert("", "end", values = ("Y Velocity:", ""))
         self.time_row = self.general_treeview.insert("", "end", values = ("Solve Time:", ""))
+        self.gap_time = self.general_treeview.insert("", "end", values = ("Gap to Average Time:", ""), tags = ('time',))
         self.average_time = self.general_treeview.insert("", "end", values = ("Average Solve Time:", ""))
         self.progress_row = self.general_treeview.insert("", "end", values = ("Progress:", ""))
         self.general_treeview.bind("<Button-1>", self.disable_treeview)
@@ -244,6 +245,7 @@ class Interface:
             self.general_treeview.set(self.y_position_row, "column2", round(self.algorithm.ball.position[1], 2))
             self.general_treeview.set(self.x_velocity_row, "column2", round(self.algorithm.ball.velocity[0], 2))
             self.general_treeview.set(self.y_velocity_row, "column2", round(self.algorithm.ball.velocity[1], 2))
+
 
             # fix for full progressbar on start
 
@@ -451,6 +453,16 @@ class Interface:
                 m, s = divmod(average_solve_time, 60)
                 self.average_solved_time = ('{:02d}:{:02d}'.format(m, s))          
                 self.general_treeview.set(self.average_time, "column2", self.average_solved_time)
+
+        # converting current solve time to seconds
+        current_time = (minutes*60)+ seconds + hseconds
+
+        self.gap_diff = abs(current_time-average_solve_time)
+        if current_time <= average_solve_time:
+            self.general_treeview.set(self.gap_time, "column2", f"-{self.gap_diff}")
+        else:
+            self.general_treeview.set(self.gap_time, "column2", f"+{self.gap_diff}")
+            self.general_treeview.tag_configure('time', background='red')
 
 
     def insert_motor_state(self, state, time):
