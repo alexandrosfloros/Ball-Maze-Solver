@@ -155,6 +155,7 @@ class Interface:
         self.x_velocity_row = self.general_treeview.insert("", "end", values = ("X Velocity:", ""))
         self.y_velocity_row = self.general_treeview.insert("", "end", values = ("Y Velocity:", ""))
         self.time_row = self.general_treeview.insert("", "end", values = ("Solve Time:", ""))
+        self.average_time = self.general_treeview.insert("", "end", values = ("Average Solve Time:", ""))
         self.progress_row = self.general_treeview.insert("", "end", values = ("Progress:", ""))
         self.general_treeview.bind("<Button-1>", self.disable_treeview)
         self.general_treeview.pack()
@@ -262,7 +263,7 @@ class Interface:
             if self.algorithm.game_won:
                 self.stop_puzzle()
                 messagebox.showinfo("Success!", "The puzzle solve was successful.")
-            
+
             # the ball falls into a hole
 
             elif self.algorithm.game_lost:
@@ -302,6 +303,7 @@ class Interface:
         self.general_treeview.set(self.y_velocity_row, "column2", "")
         self.general_treeview.set(self.progress_row, "column2", "")
         self.general_treeview.set(self.time_row, "column2", "00:00:0")
+        self.general_treeview.set(self.average_time, "column2", "00:00:0")
 
         # reset motor state treeview
 
@@ -431,6 +433,25 @@ class Interface:
 
         self.constant_time = "%02d:%02d:%01d" % (minutes, seconds, hseconds)
         self.general_treeview.set(self.time_row, "column2", self.constant_time)
+
+        if self.algorithm.game_won:
+            # add the successful solve time to the file 
+            with open('solvetime.txt', 'w') as writer:
+                writer.write(self.constant_time)
+            # read all values in the file and add to a list
+            with open('solvetime.txt', 'r') as reader:
+                all_times = reader.readlines()
+                convert_time = [3600,60,1]
+                # converts times in the list from string to integer in seconds
+                for t in all_times:
+                    all_times = sum([int(a)*int(b) for a,b in zip(convert_time, [int(i) for i in t.split(":")])])
+                # average solve time in seconds
+                average_solve_time = sum(all_times)/len(all_times)     
+                # convert avg solve to minutes and format 
+                m, s = divmod(average_solve_time, 60)
+                self.average_solved_time = ('{:02d}:{:02d}'.format(m, s))          
+                self.general_treeview.set(self.average_time, "column2", self.average_solved_time)
+
 
     def insert_motor_state(self, state, time):
         self.motor_state_treeview.insert("", 0, values = (state, time))
