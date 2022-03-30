@@ -62,12 +62,11 @@ class Ball:
 
 
         self.s = numpy.ones((5 ,5), numpy.uint8)
-        self.rangomax = numpy.array([140,90,13])  # BGR color 
-        self.rangomin = numpy.array([20, 11, 0])  # BGR color 
+        self.rangomax = numpy.array([110, 60, 25])  # BGR color 
+        self.rangomin = numpy.array([30, 30, 0])  # BGR color 
         self.T1 = time.time()   
-
     
-    # the board is not tilting
+    # the board is not tilting  
     
     def motor_zero_x(self):
         self.motor_state = "ZERO_X"
@@ -94,7 +93,7 @@ class Ball:
         if self.simulated:
             self.acceleration[0] = 0.007 # units/(frame^2) acceleration is set manually, only used for simulation
         else:
-            arduino.write(b'c')
+            arduino.write(b'a')
             #print('x motor clockwise rotate 36 degrees') # the real motor is triggered here
 
     def motor_neg_x(self):
@@ -103,7 +102,7 @@ class Ball:
         if self.simulated:
             self.acceleration[0] = -0.007 # units/(frame^2) acceleration is set manually, only used for simulation
         else:
-            arduino.write(b'a')
+            arduino.write(b'c')
             #print('x motor anti-clockwise rotate 36 degrees') # the real motor is triggered here
     
     # the ball moves in the y axis
@@ -177,9 +176,9 @@ class Ball:
                 self.velocity[0] = x_Distance / (self.moving_data[self.count][2]-self.moving_data[self.count-9][2])
                 self.velocity[1] = y_Distance / (self.moving_data[self.count][2]-self.moving_data[self.count-9][2])
                 del self.moving_data[self.count-9]
-            if self.velocity[0]<1:
+            if self.velocity[0]<1<0.3:
                 self.velocity[0]=0
-            elif self.velocity[1]<1:
+            elif self.velocity[1]<0.3:
                 self.velocity[1]=0
             elif  self.velocity[0] > 15 or self.velocity[1] >15:
                 self.velocity = [0,0]
@@ -187,14 +186,19 @@ class Ball:
 
             return self.velocity
     def cal_position(self): 
-            ret, frame = self.cam.read()                                    # image read 
+            ret, frame = self.cam.read()
+                                 # image read 
             mask = cv2.inRange(frame, self.rangomin, self.rangomax)               # get blue pixel on the image 
             blue = cv2.morphologyEx(mask, cv2.MORPH_OPEN, self.s)            # creat a image of blue-pixel only 
             x, y, w, h = cv2.boundingRect(blue)                         # get blue pixel location 
  
-            position = [int((x+w/2-98)/18),int(23.5-(y+h/2-37)/18)]
+            position = [((x+w/2-98)/18),(23.5-(y+h/2-37)/18)]
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 3)
-            #cv2.imshow('camera', frame)    
+            if position[0] < 0:
+                position[0]=0 
+            if position[1] < 0:
+                position[1] = 0 
+            cv2.imshow('camera', frame)
             return position
 
 
