@@ -37,100 +37,92 @@ if(Serial.available()) {
     switch (command){
     case 'a' :
       // clockwise rotate 36 degrees
-      while(stepper_1.currentPosition() != 20)
+      while(stepper_1.currentPosition() != 13)
       {
-      stepper_1.setSpeed(70);
+      stepper_1.setSpeed(60);
       stepper_1.runSpeed();
       }
-      Serial.println(36);
-      Serial.println(stepper_1.currentPosition());
+ 
       break;
 
     case 'b' :
       // return to 0 degree
       // detect the motor current position
-      if (stepper_1.currentPosition() == 20){
+      if (stepper_1.currentPosition() == 13){
         while(stepper_1.currentPosition() != 0)
         {
-        stepper_1.setSpeed(-70);
+        stepper_1.setSpeed(-60);
         stepper_1.runSpeed();
         }
-        Serial.println(0);
-        Serial.println(stepper_1.currentPosition());
+        
       }
-      else if (stepper_1.currentPosition() == -20){
+      else if (stepper_1.currentPosition() == -13){
         while(stepper_1.currentPosition() != 0)
         {
-        stepper_1.setSpeed(70);
+        stepper_1.setSpeed(60);
         stepper_1.runSpeed();
         
         }
-        Serial.println(0);
-        Serial.println(stepper_1.currentPosition());
+        
       }
       else {}
       break;
 
     case 'c' :
       // anti-clockwise rotate 36 degrees
-      while(stepper_1.currentPosition() != -20)
+      while(stepper_1.currentPosition() != -13)
       {
-      stepper_1.setSpeed(-70);
+      stepper_1.setSpeed(-60);
       stepper_1.runSpeed();
       
       }
-      Serial.println(-36);
-      Serial.println(stepper_1.currentPosition());
+      
       break;
 
     case 'd' :
       // clockwise rotate 36 degrees
-      while(stepper_2.currentPosition() != 20)
+      while(stepper_2.currentPosition() != 13)
       {
-      stepper_2.setSpeed(70);
+      stepper_2.setSpeed(60);
       stepper_2.runSpeed();
       
       }
-      Serial.println(36);
-      Serial.println(stepper_2.currentPosition());
+      
       break;
 
     case 'e' :
       // return to 0 degree
       // detect the motor current position
-      if (stepper_2.currentPosition() == 20){
+      if (stepper_2.currentPosition() == 13){
         while(stepper_2.currentPosition() != 0)
         {
-        stepper_2.setSpeed(-70);
+        stepper_2.setSpeed(-60);
         stepper_2.runSpeed();
         
         }
-        Serial.println(0);
-        Serial.println(stepper_2.currentPosition());
+        
       }
-      else if (stepper_2.currentPosition() == -20){
+      else if (stepper_2.currentPosition() == -13){
         while(stepper_2.currentPosition() != 0)
         {
-        stepper_2.setSpeed(70);
+        stepper_2.setSpeed(60);
         stepper_2.runSpeed();
         
         }
-        Serial.println(0);
-        Serial.println(stepper_2.currentPosition());
+        
       }
       else {}
       break;
 
     case 'f' :
       // anti-clockwise rotate 36 degrees
-      while(stepper_2.currentPosition() != -20)
+      while(stepper_2.currentPosition() != -13)
       {
-      stepper_2.setSpeed(-70);
+      stepper_2.setSpeed(-60);
       stepper_2.runSpeed();
       
       }
-      Serial.println(-36);
-      Serial.println(stepper_2.currentPosition());
+      
       break;
     case 'g' :
     digitalWrite(led, true);

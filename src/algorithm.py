@@ -62,8 +62,8 @@ class Ball:
 
 
         self.s = numpy.ones((5 ,5), numpy.uint8)
-        self.rangomax = numpy.array([110, 60, 25])  # BGR color 
-        self.rangomin = numpy.array([30, 30, 0])  # BGR color 
+        self.rangomax = numpy.array([150, 200, 255])  # BGR color 
+        self.rangomin = numpy.array([60, 150, 183])  # BGR color 
         self.T1 = time.time()   
     
     # the board is not tilting  
@@ -176,13 +176,10 @@ class Ball:
                 self.velocity[0] = x_Distance / (self.moving_data[self.count][2]-self.moving_data[self.count-9][2])
                 self.velocity[1] = y_Distance / (self.moving_data[self.count][2]-self.moving_data[self.count-9][2])
                 del self.moving_data[self.count-9]
-            if self.velocity[0]<1<0.3:
+            if self.velocity[0]<0.25:
                 self.velocity[0]=0
-            elif self.velocity[1]<0.3:
+            elif self.velocity[1]<0.25:
                 self.velocity[1]=0
-            elif  self.velocity[0] > 15 or self.velocity[1] >15:
-                self.velocity = [0,0]
-                
 
             return self.velocity
     def cal_position(self): 
@@ -281,6 +278,7 @@ class BallMazeAlgorithm:
 
                 if self.ball.progress == self.limit:
                     self.game_won = True
+                #elif self.ball.position
 
         # the game is lost
 

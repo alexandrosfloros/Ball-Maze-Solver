@@ -8,7 +8,7 @@ from motor_control_testing.graphics import *
 # initialising path nodes
 
 easy_nodes = [
-    [15.00, 23.00],
+    [14.50, 23.00],
     [0.50, 23.00],
     [0.50, 13.00],
     [2.50, 13.00],
