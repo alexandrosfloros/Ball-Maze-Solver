@@ -62,8 +62,8 @@ class Ball:
 
 
         self.s = numpy.ones((5 ,5), numpy.uint8)
-        self.rangomax = numpy.array([110, 60, 25])  # BGR color 
-        self.rangomin = numpy.array([30, 30, 0])  # BGR color 
+        self.rangomax = numpy.array([150, 140, 60])  # BGR color 
+        self.rangomin = numpy.array([90, 80, 0])  # BGR color 
         self.T1 = time.time()   
     
     # the board is not tilting  

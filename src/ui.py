@@ -261,7 +261,32 @@ class Interface:
 
             # the ball reaches the end
 
-            if self.algorithm.game_won:                
+            if self.algorithm.game_won:
+            # add the successful solve time to the file 
+                with open('solvetime.txt', 'a') as writer:
+                    writer.write(self.constant_time + "\n")
+                writer.close()
+                # read all values in the file and add to a list
+                with open('randomno.txt', 'r') as reader:
+                    all_times = reader.readlines()
+                    edited_list = []
+                    seconds_list = []
+                    convert_time = [60, 1, 0.01]
+                    for x in all_times:
+                        edited_list.append(x.replace("\n", ""))
+                    print(edited_list)
+                    for e in edited_list:
+                        seconds_list.append(sum([a * b for a, b in zip(convert_time, map(int, e.split(':')))]))
+                    print(seconds_list)
+                    average_solve_time = sum(seconds_list) / len(seconds_list)
+                    print(average_solve_time)
+                    avg_hours = int(average_solve_time / 3600)
+                    avg_minutes = int(average_solve_time / 60 - avg_hours * 60.0)
+                    avg_seconds = int(average_solve_time - avg_hours * 3600.0 - avg_minutes * 60.0)
+                    avg_hseconds = int((average_solve_time - avg_hours * 3600.0 - avg_minutes * 60.0 - avg_seconds) * 10)
+                    self.final_avg_time = "%02d:%02d:%01d" % (avg_minutes, avg_seconds, avg_hseconds)
+                    self.general_treeview.set(self.average_time, "column2", self.final_avg_time)
+                reader.close()              
                 self.stop_puzzle()
                 messagebox.showinfo("Success!", "The puzzle solve was successful.")
 
@@ -436,43 +461,18 @@ class Interface:
         self.constant_time = "%02d:%02d:%01d" % (minutes, seconds, hseconds)
         self.general_treeview.set(self.time_row, "column2", self.constant_time)            
 
-        if self.algorithm.game_won:
-            # add the successful solve time to the file 
-            with open('solvetime.txt', 'a') as writer:
-                writer.write(self.constant_time + "\n")
-            writer.close()
-            # read all values in the file and add to a list
-            with open('randomno.txt', 'r') as reader:
-                all_times = reader.readlines()
-                edited_list = []
-                seconds_list = []
-                convert_time = [60, 1, 0.01]
-                for x in all_times:
-                    edited_list.append(x.replace("\n", ""))
-                print(edited_list)
-                for e in edited_list:
-                    seconds_list.append(sum([a * b for a, b in zip(convert_time, map(int, e.split(':')))]))
-                print(seconds_list)
-                average_solve_time = sum(seconds_list) / len(seconds_list)
-                print(average_solve_time)
-                avg_hours = int(average_solve_time / 3600)
-                avg_minutes = int(average_solve_time / 60 - avg_hours * 60.0)
-                avg_seconds = int(average_solve_time - avg_hours * 3600.0 - avg_minutes * 60.0)
-                avg_hseconds = int((average_solve_time - avg_hours * 3600.0 - avg_minutes * 60.0 - avg_seconds) * 10)
-                self.final_avg_time = "%02d:%02d:%01d" % (avg_minutes, avg_seconds, avg_hseconds)
-                self.general_treeview.set(self.average_time, "column2", self.final_avg_time)
-            reader.close()
+
 
         # converting current solve time to seconds
-        current_time = (minutes*60)+ seconds + (hseconds*0.1)
+    #    current_time = (minutes*60)+ seconds + (hseconds*0.1)
 
-        self.gap_diff = abs(current_time-average_solve_time)
-        if current_time <= average_solve_time:
-            self.general_treeview.set(self.gap_time, "column2", f"-{self.gap_diff}")
-            self.general_treeview.tag_configure('time', background='green')
-        else:
-            self.general_treeview.set(self.gap_time, "column2", f"+{self.gap_diff}")
-            self.general_treeview.tag_configure('time', background='red')
+    #     self.gap_diff = abs(current_time-average_solve_time)
+    #     if current_time <= average_solve_time:
+    #         self.general_treeview.set(self.gap_time, "column2", f"-{self.gap_diff}")
+    #         self.general_treeview.tag_configure('time', background='green')
+    #     else:
+    #         self.general_treeview.set(self.gap_time, "column2", f"+{self.gap_diff}")
+    #         self.general_treeview.tag_configure('time', background='red')  
 
     def insert_motor_state(self, state, time):
         self.motor_state_treeview.insert("", 0, values = (state, time))
