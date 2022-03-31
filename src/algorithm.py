@@ -281,7 +281,7 @@ class BallMazeAlgorithm:
 
                 if self.ball.progress == self.limit:
                     self.game_won = True
-                elif (self.nodes[-2][0] -0.5 <= self.ball.position[0] <= self.nodes[-2][0] + 0.5) and (self.nodes[-2][1] -0.5 <= self.ball.position[1] <= self.nodes[-2][1] + 0.5):
+                elif (self.nodes[-1][0] -0.5 <= self.ball.position[0] <= self.nodes[-1][0] + 0.5) and (self.nodes[-1][1] -0.5 <= self.ball.position[1] <= self.nodes[-1][1] + 0.5):
                     self.game_won = True
 
         # the game is lost

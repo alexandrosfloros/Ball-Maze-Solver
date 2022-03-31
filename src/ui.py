@@ -155,7 +155,7 @@ class Interface:
         self.y_velocity_row = self.general_treeview.insert("", "end", values = ("Y Velocity:", ""))
         self.time_row = self.general_treeview.insert("", "end", values = ("Solve Time:", ""))
         self.gap_time = self.general_treeview.insert("", "end", values = ("Average Gap Time:", ""), tags = ('time',))
-        self.average_time = self.general_treeview.insert("", "end", values = ("Average Solve Time:", ""))
+        self.average_time = self.general_treeview.insert("", "end", values = ("Avg Solve Time:", ""))
         self.progress_row = self.general_treeview.insert("", "end", values = ("Progress:", ""))
         self.general_treeview.bind("<Button-1>", self.disable_treeview)
         self.general_treeview.pack()
@@ -267,7 +267,7 @@ class Interface:
                     writer.write(self.constant_time + "\n")
                 writer.close()
                 # read all values in the file and add to a list
-                with open('randomno.txt', 'r') as reader:
+                with open('solvetime.txt', 'r') as reader:
                     all_times = reader.readlines()
                     edited_list = []
                     seconds_list = []
