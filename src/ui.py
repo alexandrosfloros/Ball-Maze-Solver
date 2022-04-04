@@ -88,7 +88,7 @@ class Interface:
 
         # initialise max speed combobox
 
-        self.max_speed_combobox = ttk.Combobox(self.max_speed_frame, values = (0.10, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 10), width = 5, state = "readonly")
+        self.max_speed_combobox = ttk.Combobox(self.max_speed_frame, values = (0.10, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 15), width = 5, state = "readonly")
         self.max_speed_combobox.pack(side = "left")
         self.max_speed_combobox.current(0)
 
@@ -146,8 +146,8 @@ class Interface:
 
         # initialise general treeview
         self.general_treeview = ttk.Treeview(self.info_frame, columns = ("column1", "column2"), show = "headings", selectmode = "none") # contains general info about the puzzle
-        self.general_treeview.column("column1", width = 120)
-        self.general_treeview.column("column2", width = 120)
+        self.general_treeview.column("column1", width = 130)
+        self.general_treeview.column("column2", width = 130)
         self.difficulty_row = self.general_treeview.insert("", "end", values = ("Difficulty:", ""))
         self.x_position_row = self.general_treeview.insert("", "end", values = ("X Position:", ""))
         self.y_position_row = self.general_treeview.insert("", "end", values = ("Y Position:", ""))
@@ -266,27 +266,7 @@ class Interface:
                 with open('solvetime.txt', 'a') as writer:
                     writer.write(self.constant_time + "\n")
                 writer.close()
-                # read all values in the file and add to a list
-                with open('solvetime.txt', 'r') as reader:
-                    all_times = reader.readlines()
-                    edited_list = []
-                    seconds_list = []
-                    convert_time = [60, 1, 0.01]
-                    for x in all_times:
-                        edited_list.append(x.replace("\n", ""))
-                    print(edited_list)
-                    for e in edited_list:
-                        seconds_list.append(sum([a * b for a, b in zip(convert_time, map(int, e.split(':')))]))
-                    print(seconds_list)
-                    average_solve_time = sum(seconds_list) / len(seconds_list)
-                    print(average_solve_time)
-                    avg_hours = int(average_solve_time / 3600)
-                    avg_minutes = int(average_solve_time / 60 - avg_hours * 60.0)
-                    avg_seconds = int(average_solve_time - avg_hours * 3600.0 - avg_minutes * 60.0)
-                    avg_hseconds = int((average_solve_time - avg_hours * 3600.0 - avg_minutes * 60.0 - avg_seconds) * 10)
-                    self.final_avg_time = "%02d:%02d:%01d" % (avg_minutes, avg_seconds, avg_hseconds)
-                    self.general_treeview.set(self.average_time, "column2", self.final_avg_time)
-                reader.close()              
+                self.calculate_average_time()
                 self.stop_puzzle()
                 messagebox.showinfo("Success!", "The puzzle solve was successful.")
 
@@ -298,7 +278,7 @@ class Interface:
 
             return model.update_ball(self.puzzle_display_axes)
 
-        self.animation = FuncAnimation(self.puzzle_display_figure, update, init_func = init, blit = True, interval = 33) # 30fps
+        self.animation = FuncAnimation(self.puzzle_display_figure, update, init_func = init, blit = True, interval = 200) # 30fps
 
     def reset_animation(self):
         try:
@@ -410,6 +390,8 @@ class Interface:
             return "break"
     
     def start_puzzle(self, nodes, holes, simulated):
+        self.calculate_average_time()
+        #self.calculate_gap()
         x, y = nodes[0]
         ball = Ball([x, y])
         model = BallMazeModel(ball, nodes, holes)
@@ -451,28 +433,48 @@ class Interface:
             self.timer_running = False
 
     def format_time(self, elap):
-        hours = int(elap / 3600)
-        minutes = int(elap / 60 - hours * 60.0)
-        seconds = int(elap - hours * 3600.0 - minutes * 60.0)
-        hseconds = int((elap - hours * 3600.0 - minutes * 60.0 - seconds) * 10)
+        self.hours = int(elap / 3600)
+        self.minutes = int(elap / 60 - self.hours * 60.0)
+        self.seconds = int(elap - self.hours * 3600.0 - self.minutes * 60.0)
+        self.hseconds = int((elap - self.hours * 3600.0 - self.minutes * 60.0 - self.seconds) * 10)
 
         # display stopwatch
 
-        self.constant_time = "%02d:%02d:%01d" % (minutes, seconds, hseconds)
+        self.constant_time = "%02d:%02d:%01d" % (self.minutes, self.seconds, self.hseconds)
         self.general_treeview.set(self.time_row, "column2", self.constant_time)            
 
+    def calculate_average_time(self):
+    # read all values in the file and add to a list
+        with open('solvetime.txt', 'r') as reader:
+            all_times = reader.readlines()
+            edited_list = []
+            seconds_list = []
+            convert_time = [60, 1, 0.01]
+            for x in all_times:
+                edited_list.append(x.replace("\n", ""))
+            print(edited_list)
+            for e in edited_list:
+                seconds_list.append(sum([a * b for a, b in zip(convert_time, map(int, e.split(':')))]))
+            print(seconds_list)
+            self.average_solve_time = sum(seconds_list) / len(seconds_list)
+            print(self.average_solve_time)
+            self.avg_hours= int(self.average_solve_time / 3600)
+            self.avg_minutes = int(self.average_solve_time / 60 - self.avg_hours * 60.0)
+            self.avg_seconds = int(self.average_solve_time - self.avg_hours * 3600.0 - self.avg_minutes * 60.0)
+            self.avg_hseconds = int((self.average_solve_time - self.avg_hours * 3600.0 - self.avg_minutes * 60.0 - self.avg_seconds) * 10)
+            self.final_avg_time = "%02d:%02d:%01d" % (self.avg_minutes, self.avg_seconds, self.avg_hseconds)
+            self.general_treeview.set(self.average_time, "column2", self.final_avg_time)
+        reader.close()
 
-
-        # converting current solve time to seconds
-    #    current_time = (minutes*60)+ seconds + (hseconds*0.1)
-
-    #     self.gap_diff = abs(current_time-average_solve_time)
-    #     if current_time <= average_solve_time:
-    #         self.general_treeview.set(self.gap_time, "column2", f"-{self.gap_diff}")
-    #         self.general_treeview.tag_configure('time', background='green')
+    # def calculate_gap(self):
+    #     self.current_time = (self.minutes*60)+ self.seconds + (self.hseconds*0.01)
+    #     self.gap_diff = abs(self.current_time-self.average_solve_time)
+    #     if self.current_time <= self.average_solve_time:
+    #         self.general_treeview(self.gap_time, "column2", f"-{self.gap_diff}")
+    #         self.general_treeview.tag_configure('time', background = 'green')
     #     else:
-    #         self.general_treeview.set(self.gap_time, "column2", f"+{self.gap_diff}")
-    #         self.general_treeview.tag_configure('time', background='red')  
+    #         self.general_treeview(self.gap_time, "column2", f"+{self.gap_diff}")
+    #         self.general_treeview.tag_configure('time', background = 'red')
 
     def insert_motor_state(self, state, time):
         self.motor_state_treeview.insert("", 0, values = (state, time))
