@@ -147,14 +147,14 @@ class Interface:
         # initialise general treeview
         self.general_treeview = ttk.Treeview(self.info_frame, columns = ("column1", "column2"), show = "headings", selectmode = "none") # contains general info about the puzzle
         self.general_treeview.column("column1", width = 130)
-        self.general_treeview.column("column2", width = 130)
+        self.general_treeview.column("column2", width = 110)
         self.difficulty_row = self.general_treeview.insert("", "end", values = ("Difficulty:", ""))
         self.x_position_row = self.general_treeview.insert("", "end", values = ("X Position:", ""))
         self.y_position_row = self.general_treeview.insert("", "end", values = ("Y Position:", ""))
         self.x_velocity_row = self.general_treeview.insert("", "end", values = ("X Velocity:", ""))
         self.y_velocity_row = self.general_treeview.insert("", "end", values = ("Y Velocity:", ""))
         self.time_row = self.general_treeview.insert("", "end", values = ("Solve Time:", ""))
-        self.gap_time = self.general_treeview.insert("", "end", values = ("Average Gap Time:", ""), tags = ('time',))
+        self.gap_time = self.general_treeview.insert("", "end", values = ("Average Gap Time:", ""), tags = ('colour'))
         self.average_time = self.general_treeview.insert("", "end", values = ("Avg Solve Time:", ""))
         self.progress_row = self.general_treeview.insert("", "end", values = ("Progress:", ""))
         self.general_treeview.bind("<Button-1>", self.disable_treeview)
@@ -232,10 +232,8 @@ class Interface:
             self.algorithm.ball.position[1] = self.algorithm.ball.cal_position()[1]
             self.algorithm.ball.time = time.time()
             self.algorithm.ball.velocity[0] = self.algorithm.ball.cal_speed()[0]
-            self.algorithm.ball.velocity[1] = self.algorithm.ball.cal_speed()[1]
-    
+            self.algorithm.ball.velocity[1] = self.algorithm.ball.cal_speed()[1]   
         
-            
             self.algorithm.run()
             
             # update table values
@@ -391,7 +389,7 @@ class Interface:
     
     def start_puzzle(self, nodes, holes, simulated):
         self.calculate_average_time()
-        #self.calculate_gap()
+        self.calculate_gap()
         x, y = nodes[0]
         ball = Ball([x, y])
         model = BallMazeModel(ball, nodes, holes)
@@ -466,15 +464,15 @@ class Interface:
             self.general_treeview.set(self.average_time, "column2", self.final_avg_time)
         reader.close()
 
-    # def calculate_gap(self):
-    #     self.current_time = (self.minutes*60)+ self.seconds + (self.hseconds*0.01)
-    #     self.gap_diff = abs(self.current_time-self.average_solve_time)
-    #     if self.current_time <= self.average_solve_time:
-    #         self.general_treeview(self.gap_time, "column2", f"-{self.gap_diff}")
-    #         self.general_treeview.tag_configure('time', background = 'green')
-    #     else:
-    #         self.general_treeview(self.gap_time, "column2", f"+{self.gap_diff}")
-    #         self.general_treeview.tag_configure('time', background = 'red')
+    def calculate_gap(self):
+        self.current_time = (self.minutes*60)+ self.seconds + (self.hseconds*0.01)
+        self.gap_diff = abs(self.current_time-self.average_solve_time)
+        if self.current_time <= self.average_solve_time:
+            self.general_treeview.set(self.gap_time, "column2", f"-{self.gap_diff}")
+            self.general_treeview.tag_configure('colour', background = 'green')
+        else:
+            self.general_treeview.set(self.gap_time, "column2", f"+{self.gap_diff}")
+            self.general_treeview.tag_configure('colour', background = 'red')
 
     def insert_motor_state(self, state, time):
         self.motor_state_treeview.insert("", 0, values = (state, time))
